@@ -1,5 +1,6 @@
 import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian';
 import * as internal from 'stream';
+import * as settings from 'src/settings'
 // const fs = require('fs')
 // Remember to rename these classes and interfaces!
 
@@ -7,15 +8,6 @@ import * as internal from 'stream';
 // 	mySetting: string;
 // }
 
-interface IgnoreFilterSettings {
-	basicIgnores: Array<string>;
-	ignoreFilters: Array<Array<string>>;
-}
-
-const DEFAULT_SETTINGS: IgnoreFilterSettings = {
-	basicIgnores: [],
-	ignoreFilters: []
-}
 
 // const DEFAULT_SETTINGS: MyPluginSettings = {
 // 	mySetting: 'default'
@@ -27,7 +19,7 @@ const DEFAULT_SETTINGS: IgnoreFilterSettings = {
 // }`
 
 export default class IgnoreFiltersPlugin extends Plugin {
-	settings: IgnoreFilterSettings;
+	settings: settings.IgnoreFilterSettings;
 
 	async onload() {
 		await this.loadSettings();
@@ -105,7 +97,7 @@ export default class IgnoreFiltersPlugin extends Plugin {
 	}
 
 	async loadSettings() {
-		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+		this.settings = Object.assign({}, settings.DEFAULT_SETTINGS, await this.loadData());
 	}
 
 	async saveSettings() {
@@ -150,6 +142,11 @@ class IgnoreFiltersSettingTab extends PluginSettingTab {
 				text.inputEl.style.height = "300px";
 				text.inputEl.style.width = "100%";
 				text
+				.setValue(settings.basicIgnoresToStr(this.plugin.settings))
+				.onChange(async (value) => {
+					this.plugin.settings.basicIgnores = settings.basicFiltersToList(value)
+					await this.plugin.saveSettings();
+				})
 					// .setValue(
 					// 	this.plugin.settings.mySetting
 					// )
@@ -161,6 +158,11 @@ class IgnoreFiltersSettingTab extends PluginSettingTab {
 				text.inputEl.style.height = "300px";
 				text.inputEl.style.width = "100%";
 				text
+				.setValue(settings.ignoreFiltersToStr(this.plugin.settings))
+				.onChange(async (value) => {
+					this.plugin.settings.ignoreFilters = settings.ignoreFiltersToList(value)
+					await this.plugin.saveSettings();
+				})
 					// .setValue(
 					// 	this.plugin.settings.mySetting
 					// )
