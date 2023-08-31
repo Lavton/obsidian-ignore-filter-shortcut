@@ -1,43 +1,54 @@
 import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian';
-//const fs = require('fs')
+import * as internal from 'stream';
+// const fs = require('fs')
 // Remember to rename these classes and interfaces!
 
-interface MyPluginSettings {
-	mySetting: string;
+// interface MyPluginSettings {
+// 	mySetting: string;
+// }
+
+interface IgnoreFilterSettings {
+	basicIgnores: Array<string>;
+	ignoreFilters: Array<Array<string>>;
 }
 
-const DEFAULT_SETTINGS: MyPluginSettings = {
-	mySetting: 'default'
+const DEFAULT_SETTINGS: IgnoreFilterSettings = {
+	basicIgnores: [],
+	ignoreFilters: []
 }
-const IGNOR2 = `{
-  "userIgnoreFilters": [
-    "ignore_1/"
-  ]
-}`
 
-export default class MyPlugin extends Plugin {
-	settings: MyPluginSettings;
+// const DEFAULT_SETTINGS: MyPluginSettings = {
+// 	mySetting: 'default'
+// }
+// const IGNOR2 = `{
+//   "userIgnoreFilters": [
+//     "ignore_1/"
+//   ]
+// }`
+
+export default class IgnoreFiltersPlugin extends Plugin {
+	settings: IgnoreFilterSettings;
 
 	async onload() {
 		await this.loadSettings();
 
 		// This creates an icon in the left ribbon.
-		const ribbonIconEl = this.addRibbonIcon('dice', 'Sample Plugin', (evt: MouseEvent) => {
-			// fs.readFile(this.app.vault.adapter.basePath + '/.obsidian/app.json', 'utf8', (err, data) => {
-			//			console.log(data)
-			//		})
-			//		fs.writeFile('/home/lavton/scripts/obsidian_plugs/test_plugs/.obsidian/app.json', IGNOR2, (err) => { console.error(err) });
-			//		console.log("aaaa");
-			//		console.log(__dirname)
-			// Called when the user clicks the icon.
-			new Notice('This is a notice!');
-		});
-		// Perform additional things with the ribbon
-		ribbonIconEl.addClass('my-plugin-ribbon-class');
+		// const ribbonIconEl = this.addRibbonIcon('dice', 'Sample Plugin', (evt: MouseEvent) => {
+		// 	// fs.readFile(this.app.vault.adapter.basePath + '/.obsidian/app.json', 'utf8', (err, data) => {
+		// 	// 	console.log(data)
+		// 	// })
+		// 	// fs.writeFile('/home/lavton/scripts/obsidian_plugs/test_plugs/.obsidian/app.json', IGNOR2, (err) => { console.error(err) });
+		// 	console.log("aaaa");
+		// 	console.log(__dirname)
+		// 	// Called when the user clicks the icon.
+		// 	new Notice('This is a notice!');
+		// });
+		// // Perform additional things with the ribbon
+		// ribbonIconEl.addClass('my-plugin-ribbon-class');
 
 		// This adds a status bar item to the bottom of the app. Does not work on mobile apps.
-		const statusBarItemEl = this.addStatusBarItem();
-		statusBarItemEl.setText('Status Bar Text');
+		// const statusBarItemEl = this.addStatusBarItem();
+		// statusBarItemEl.setText('Status Bar Text');
 
 		// This adds a simple command that can be triggered anywhere
 		this.addCommand({
@@ -77,7 +88,7 @@ export default class MyPlugin extends Plugin {
 		});
 
 		// This adds a settings tab so the user can configure various aspects of the plugin
-		this.addSettingTab(new SampleSettingTab(this.app, this));
+		this.addSettingTab(new IgnoreFiltersSettingTab(this.app, this));
 
 		// If the plugin hooks up any global DOM events (on parts of the app that doesn't belong to this plugin)
 		// Using this function will automatically remove the event listener when this plugin is disabled.
@@ -118,10 +129,10 @@ class SampleModal extends Modal {
 	}
 }
 
-class SampleSettingTab extends PluginSettingTab {
-	plugin: MyPlugin;
+class IgnoreFiltersSettingTab extends PluginSettingTab {
+	plugin: IgnoreFiltersPlugin;
 
-	constructor(app: App, plugin: MyPlugin) {
+	constructor(app: App, plugin: IgnoreFiltersPlugin) {
 		super(app, plugin);
 		this.plugin = plugin;
 	}
@@ -132,14 +143,34 @@ class SampleSettingTab extends PluginSettingTab {
 		containerEl.empty();
 
 		new Setting(containerEl)
-			.setName('Setting #1')
-			.setDesc('It\'s a secret')
-			.addText(text => text
-				.setPlaceholder('Enter your secret')
-				.setValue(this.plugin.settings.mySetting)
-				.onChange(async (value) => {
-					this.plugin.settings.mySetting = value;
-					await this.plugin.saveSettings();
-				}));
+			// as in https://github.com/zsviczian/excalibrain/blob/master/src/Settings.ts
+			.setName('default ignore filter')
+			.setDesc('what ignored always. Add one by line')
+			.addTextArea((text) => {
+				text.inputEl.style.height = "300px";
+				text.inputEl.style.width = "100%";
+				text
+					// .setValue(
+					// 	this.plugin.settings.mySetting
+					// )
+			})
+		new Setting(containerEl)
+		.setName('ignored filters')
+		.setDesc('list of ignored filters. Separate by black line')
+			.addTextArea((text) => {
+				text.inputEl.style.height = "300px";
+				text.inputEl.style.width = "100%";
+				text
+					// .setValue(
+					// 	this.plugin.settings.mySetting
+					// )
+			})
+		// .addText(text => text
+		// 	.setPlaceholder('Enter your secret')
+		// 	.setValue(this.plugin.settings.mySetting)
+		// 	.onChange(async (value) => {
+		// 		this.plugin.settings.mySetting = value;
+		// 		await this.plugin.saveSettings();
+		// 	}));
 	}
 }
