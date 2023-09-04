@@ -5,7 +5,6 @@
 	"minAppVersion": "0.15.0",
 	"description": "the plugin is simplify the 'ignore filter' changes",
 	"author": "lavton",
- "authorUrl": "https://obsidian.md",
- "fundingUrl": "https://obsidian.md/pricing",
+	"authorUrl": "https://github.com/Lavton",
 	"isDesktopOnly": false
 }
