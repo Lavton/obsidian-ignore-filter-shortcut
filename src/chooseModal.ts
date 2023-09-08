@@ -26,7 +26,8 @@ export class SuggestFilterModal extends SuggestModal<IgnoreFilter> {
         el.createEl("small", {text: value.filters.join("\n")})
     }
     onChooseSuggestion(item: IgnoreFilter, evt: MouseEvent | KeyboardEvent) {
-        this.app.vault.setConfig("userIgnoreFilters", item.filters);
+        var allFilters: string[] = [...this.basicIgnores, ...item.filters]
+        this.app.vault.setConfig("userIgnoreFilters", allFilters);
         new Notice(`select ${item.name}`)
     }
 }
