@@ -1,5 +1,4 @@
 import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian';
-import * as internal from 'stream';
 import * as settings from 'src/settings'
 import { SuggestFilterModal } from 'src/chooseModal';
 
@@ -61,24 +60,24 @@ class IgnoreFiltersSettingTab extends PluginSettingTab {
 				text.inputEl.style.height = "300px";
 				text.inputEl.style.width = "100%";
 				text
-				.setValue(settings.basicIgnoresToStr(this.plugin.settings))
-				.onChange(async (value) => {
-					this.plugin.settings.basicIgnores = settings.basicFiltersToList(value)
-					await this.plugin.saveSettings();
-				})
+					.setValue(settings.basicIgnoresToStr(this.plugin.settings))
+					.onChange(async (value) => {
+						this.plugin.settings.basicIgnores = settings.basicFiltersToList(value)
+						await this.plugin.saveSettings();
+					})
 			})
 		new Setting(containerEl)
-		.setName('ignored filters')
-		.setDesc('list of ignored filters. Separate by black line')
+			.setName('ignored filters')
+			.setDesc('list of ignored filters. Separate by black line')
 			.addTextArea((text) => {
 				text.inputEl.style.height = "300px";
 				text.inputEl.style.width = "100%";
 				text
-				.setValue(settings.ignoreFiltersToStr(this.plugin.settings))
-				.onChange(async (value) => {
-					this.plugin.settings.ignoreFilters = settings.ignoreFiltersToList(value)
-					await this.plugin.saveSettings();
-				})
+					.setValue(settings.ignoreFiltersToStr(this.plugin.settings))
+					.onChange(async (value) => {
+						this.plugin.settings.ignoreFilters = settings.ignoreFiltersToList(value)
+						await this.plugin.saveSettings();
+					})
 			})
 	}
 }

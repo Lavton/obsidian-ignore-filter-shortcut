@@ -1,4 +1,4 @@
 export interface IgnoreFilter {
-    name: string
-    filters: Array<string>
+	name: string
+	filters: Array<string>
 }
