@@ -1,20 +1,17 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { getAllDirs } from "./utils"
   
-  console.log("aooo")
   // Пропсы от плагина
   interface Props {
-    plugin: any; // Ваш класс плагина
-    settings: any; // Объект настроек
-  }
+    plugin: any;
+	settings: any; 
+}
   
   let { plugin, settings }: Props = $props();
-//export let plugin: any;
-  // export let settings: any;
-  console.log("aaa", plugin)
   
-  // Реактивная переменная для текста
   let inputText = $state(settings.displayText || '');
+  let folders = $state([]);
   
   // Функция для сохранения настроек
   async function saveSettings() {
@@ -28,25 +25,43 @@
       saveSettings();
     }
   });
+
+//  getAllDirs(plugin.app).then(result => {
+  //console.log(result);
+//});
+onMount(async () => {
+    try {
+      folders = await getAllDirs(plugin.app);
+    } catch (error) {
+      console.error('Ошибка при загрузке папок:', error);
+    }
+  });
+//  const dirs =  await getAllDirs(plugin.app);
+  //console.log(dirs)
+
 </script>
 
 <div class="settings-container">
-  <div class="setting-item">
-    <div class="setting-item-info">
+<div class="setting-item-info">
       <div class="setting-item-name">Отображаемый текст</div>
       <div class="setting-item-description">
-        Введите текст, который будет отображаться рядом
+        Выберите папку из списка или введите свой текст
       </div>
     </div>
     <div class="setting-item-control">
       <input 
         type="text" 
         bind:value={inputText}
-        placeholder="Введите текст..."
+        placeholder="Введите текст или выберите папку..."
         class="text-input"
+        list="folders-list"
       />
+      <datalist id="folders-list">
+        {#each Array.from(folders) as folder}
+          <option value={folder}></option>
+        {/each}
+      </datalist>
     </div>
-  </div>
   
   <div class="preview-container">
     <div class="preview-label">Предварительный просмотр:</div>
