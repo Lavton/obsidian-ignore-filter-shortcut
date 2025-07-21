@@ -2,7 +2,7 @@
 	"id": "ignore-filters-shortcuts",
 	"name": "Ignore Filter Shortcuts",
 	"version": "0.0.1",
-	"minAppVersion": "0.15.0",
+	"minAppVersion": "1.1.0",
 	"description": "the plugin is simplify the 'ignore filter' changes",
 	"author": "lavton",
 	"authorUrl": "https://github.com/Lavton",

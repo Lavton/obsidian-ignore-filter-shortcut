@@ -1,7 +1,8 @@
 import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian';
 import * as settings from 'src/settings'
 import { SuggestFilterModal } from 'src/chooseModal';
-
+import SettingsS from './src/SettingsS.svelte';
+import { mount, unmount } from 'svelte';
 
 export default class IgnoreFiltersPlugin extends Plugin {
 	settings: settings.IgnoreFilterSettings;
@@ -52,6 +53,21 @@ class IgnoreFiltersSettingTab extends PluginSettingTab {
 
 		containerEl.empty();
 
+		console.log(this.plugin)
+		const settingsComponent = mount(SettingsS, {
+			target: containerEl,
+			props: {
+				plugin: this.plugin,
+				settings: this.plugin.settings
+			}
+		});
+		// const settingsComponent = new SettingsS({
+		// 	target: containerEl,
+		// 	props: {
+		// 		plugin: this.plugin,
+		// 		settings: this.plugin.settings
+		// 	}
+		// });
 		new Setting(containerEl)
 			// as in https://github.com/zsviczian/excalibrain/blob/master/src/Settings.ts
 			.setName('default ignore filter')

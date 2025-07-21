@@ -1,5 +1,5 @@
 import { App, Notice, SuggestModal } from "obsidian";
-import { IgnoreFilter } from "./iFilterI";
+import type { IgnoreFilter } from "./iFilterI";
 
 const ADD_FILTERS: Array<IgnoreFilter> = [
 	{
@@ -27,6 +27,7 @@ export class SuggestFilterModal extends SuggestModal<IgnoreFilter> {
 	}
 	onChooseSuggestion(item: IgnoreFilter, evt: MouseEvent | KeyboardEvent) {
 		var allFilters: string[] = [...this.basicIgnores, ...item.filters]
+		// @ts-ignore
 		this.app.vault.setConfig("userIgnoreFilters", allFilters);
 		new Notice(`select ${item.name}`)
 	}
