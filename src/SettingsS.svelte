@@ -10,21 +10,30 @@
   
   let { plugin, settings }: Props = $props();
   
-  let inputText = $state(settings.displayText || '');
+  let inputText = $state('');
   let folders = $state([]);
+  let basicIgnores = $state(settings.basicIgnores || [])
   
   // Функция для сохранения настроек
   async function saveSettings() {
-    settings.displayText = inputText;
+	settings.basicIgnores.sort()
     await plugin.saveSettings();
+  }
+  async function addItem() {
+	settings.basicIgnores.push(inputText);
+	basicIgnores.push(inputText);
+	basicIgnores.sort();
+	inputText = ""
+	await saveSettings();
   }
   
   // Автосохранение при изменении
-  $effect(() => {
-    if (inputText !== settings.displayText) {
-      saveSettings();
-    }
-  });
+  async function removeItem(index) {
+	basicIgnores = basicIgnores.filter((_, i) => i !== index);
+	settings.basicIgnores = basicIgnores
+	settings.basicIgnores.sort()
+	await plugin.saveSettings();
+  }
 
 //  getAllDirs(plugin.app).then(result => {
   //console.log(result);
@@ -48,6 +57,24 @@ onMount(async () => {
         Выберите папку из списка или введите свой текст
       </div>
     </div>
+
+<div class="ignore-list">
+  {#each basicIgnores as ignore, index}
+    <div class="ignore-item">
+      <p class="ignore-input">{basicIgnores[index]}</p>
+
+<hr/>
+      <button 
+        class="remove-btn" 
+        onclick={() => removeItem(index)}
+        title="Удалить"
+      >
+        ✕
+      </button>
+    </div>
+  {/each}
+</div>
+
     <div class="setting-item-control">
       <input 
         type="text" 
@@ -55,6 +82,7 @@ onMount(async () => {
         placeholder="Введите текст или выберите папку..."
         class="text-input"
         list="folders-list"
+		onkeydown={(e) => e.key === 'Enter' && addItem()} 
       />
       <datalist id="folders-list">
         {#each Array.from(folders) as folder}
@@ -63,25 +91,11 @@ onMount(async () => {
       </datalist>
     </div>
   
-  <div class="preview-container">
-    <div class="preview-label">Предварительный просмотр:</div>
-    <div class="preview-content">
-      {inputText || 'Пусто'}
-    </div>
-  </div>
 </div>
 
 <style>
   .settings-container {
     padding: 20px;
-  }
-  
-  .setting-item {
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-    padding: 10px 0;
-    border-bottom: 1px solid var(--background-modifier-border);
   }
   
   .setting-item-info {
@@ -117,25 +131,38 @@ onMount(async () => {
     border-color: var(--interactive-accent);
   }
   
-  .preview-container {
-    background: var(--background-secondary);
-    padding: 15px;
-    border-radius: 8px;
-    border: 1px solid var(--background-modifier-border);
+
+.ignore-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
   }
-  
-  .preview-label {
-    font-weight: 600;
-    margin-bottom: 10px;
-    color: var(--text-normal);
+
+  .ignore-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
-  
-  .preview-content {
-    padding: 10px;
-    background: var(--background-primary);
+
+  .ignore-input {
+    flex: 1;
+    padding: 6px 10px;
+    font-size: 14px;
+  }
+
+  .remove-btn {
+    border: none;
     border-radius: 4px;
-    border: 1px solid var(--background-modifier-border);
-    min-height: 30px;
-    color: var(--text-normal);
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+  }
+
+  .remove-btn:hover {
+    background: #ff3838;
   }
 </style>

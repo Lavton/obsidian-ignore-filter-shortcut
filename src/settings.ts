@@ -3,7 +3,6 @@ import type { IgnoreFilter } from "./iFilterI";
 export interface IgnoreFilterSettings {
 	basicIgnores: Array<string>;
 	ignoreFilters: Array<IgnoreFilter>;
-	displayText: string;
 }
 
 export const DEFAULT_SETTINGS: IgnoreFilterSettings = {
@@ -12,7 +11,6 @@ export const DEFAULT_SETTINGS: IgnoreFilterSettings = {
 		{ name: "aa", filters: ["ccc", "dd"] },
 		{ name: "bb", filters: ["xx", "yy"] }
 	],
-	displayText: ""
 }
 
 export function basicIgnoresToStr(ignoreSettings: IgnoreFilterSettings): string {

@@ -61,27 +61,20 @@ class IgnoreFiltersSettingTab extends PluginSettingTab {
 				settings: this.plugin.settings
 			}
 		});
-		// const settingsComponent = new SettingsS({
-		// 	target: containerEl,
-		// 	props: {
-		// 		plugin: this.plugin,
-		// 		settings: this.plugin.settings
-		// 	}
-		// });
-		new Setting(containerEl)
-			// as in https://github.com/zsviczian/excalibrain/blob/master/src/Settings.ts
-			.setName('default ignore filter')
-			.setDesc('what ignored always. Add one by line')
-			.addTextArea((text) => {
-				text.inputEl.style.height = "300px";
-				text.inputEl.style.width = "100%";
-				text
-					.setValue(settings.basicIgnoresToStr(this.plugin.settings))
-					.onChange(async (value) => {
-						this.plugin.settings.basicIgnores = settings.basicFiltersToList(value)
-						await this.plugin.saveSettings();
-					})
-			})
+		// new Setting(containerEl)
+		// 	// as in https://github.com/zsviczian/excalibrain/blob/master/src/Settings.ts
+		// 	.setName('default ignore filter')
+		// 	.setDesc('what ignored always. Add one by line')
+		// 	.addTextArea((text) => {
+		// 		text.inputEl.style.height = "300px";
+		// 		text.inputEl.style.width = "100%";
+		// 		text
+		// 			.setValue(settings.basicIgnoresToStr(this.plugin.settings))
+		// 			.onChange(async (value) => {
+		// 				this.plugin.settings.basicIgnores = settings.basicFiltersToList(value)
+		// 				await this.plugin.saveSettings();
+		// 			})
+		// 	})
 		new Setting(containerEl)
 			.setName('ignored filters')
 			.setDesc('list of ignored filters. Separate by black line')
