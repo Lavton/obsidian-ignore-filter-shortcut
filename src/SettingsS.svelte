@@ -61,10 +61,10 @@ onMount(async () => {
 
 <div class="settings-container">
 <div class="setting-item-info">
-      <div class="setting-item-name">Отображаемый текст</div>
+      <div class="setting-item-name">Default ignore filters</div>
       <div class="setting-item-description">
-        Выберите папку из списка или введите свой текст
-      </div>
+	These filters will be applied when you run command "return to default"
+	  </div>
     </div>
 
 <div class="ignore-list">
@@ -87,7 +87,7 @@ onMount(async () => {
       <input 
         type="text" 
         bind:value={inputText}
-        placeholder="Введите текст или выберите папку..."
+        placeholder="choose folder or regexp..."
         class="text-input"
         list="folders-list"
 		onkeydown={(e) => e.key === 'Enter' && addItem()} 
@@ -98,8 +98,12 @@ onMount(async () => {
         {/each}
       </datalist>
     </div>
-  <button onclick={() => addCurrentToDefault()}>Вставить текущие фильтры</button>
-  <button onclick={() => removeAllDefault()}>Очистить фильтры по умолчанию</button>
+{#if plugin.app.vault.getConfig("userIgnoreFilters")?.length > 0}
+  <button onclick={() => addCurrentToDefault()}>Add current ignore list to default</button>
+  {/if}
+  {#if basicIgnores.length > 0}
+  <button onclick={() => removeAllDefault()}>clear the list above</button>
+  {/if}
 </div>
 
 <style>
