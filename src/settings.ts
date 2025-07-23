@@ -6,7 +6,7 @@ export interface IgnoreFilterSettings {
 }
 
 export const DEFAULT_SETTINGS: IgnoreFilterSettings = {
-	basicIgnores: ["aaa", "bbb"],
+	basicIgnores: [],
 	ignoreFilters: [
 		{ name: "aa", filters: ["ccc", "dd"] },
 		{ name: "bb", filters: ["xx", "yy"] }

@@ -31,7 +31,13 @@ export default class IgnoreFiltersPlugin extends Plugin {
 	}
 
 	async loadSettings() {
-		this.settings = Object.assign({}, settings.DEFAULT_SETTINGS, await this.loadData());
+		// @ts-ignore
+		const currentIgnoreFilters: Array<string> = this.app.vault.getConfig("userIgnoreFilters");
+		const newDefaultSettings: settings.IgnoreFilterSettings = {
+			...settings.DEFAULT_SETTINGS,
+			basicIgnores: currentIgnoreFilters		
+		};
+		this.settings = Object.assign({}, newDefaultSettings, await this.loadData());
 	}
 
 	async saveSettings() {
