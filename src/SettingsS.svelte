@@ -20,13 +20,27 @@
     await plugin.saveSettings();
   }
   async function addItem() {
-	settings.basicIgnores.push(inputText);
+  if (inputText.trim() === "") return;
+  if (basicIgnores.includes(inputText)) return;
 	basicIgnores.push(inputText);
 	basicIgnores.sort();
+	settings.basicIgnores = basicIgnores
 	inputText = ""
 	await saveSettings();
   }
   
+  async function addCurrentToDefault() {
+	const ignoreFilters = plugin.app.vault.getConfig("userIgnoreFilters")
+	basicIgnores = [...new Set([...basicIgnores, ...ignoreFilters])].sort();
+	settings.basicIgnores = basicIgnores
+
+	await saveSettings();
+  }
+  async function removeAllDefault() {
+	basicIgnores = []
+	settings.basicIgnores = basicIgnores;
+	await saveSettings();
+  }
   // Автосохранение при изменении
   async function removeItem(index) {
 	basicIgnores = basicIgnores.filter((_, i) => i !== index);
@@ -35,9 +49,6 @@
 	await plugin.saveSettings();
   }
 
-//  getAllDirs(plugin.app).then(result => {
-  //console.log(result);
-//});
 onMount(async () => {
     try {
       folders = await getAllDirs(plugin.app);
@@ -45,8 +56,6 @@ onMount(async () => {
       console.error('Ошибка при загрузке папок:', error);
     }
   });
-//  const dirs =  await getAllDirs(plugin.app);
-  //console.log(dirs)
 
 </script>
 
@@ -61,9 +70,6 @@ onMount(async () => {
 <div class="ignore-list">
   {#each basicIgnores as ignore, index}
     <div class="ignore-item">
-      <p class="ignore-input">{basicIgnores[index]}</p>
-
-<hr/>
       <button 
         class="remove-btn" 
         onclick={() => removeItem(index)}
@@ -71,6 +77,8 @@ onMount(async () => {
       >
         ✕
       </button>
+      <p class="ignore-input">{basicIgnores[index]}</p>
+
     </div>
   {/each}
 </div>
@@ -90,7 +98,8 @@ onMount(async () => {
         {/each}
       </datalist>
     </div>
-  
+  <button onclick={() => addCurrentToDefault()}>Вставить текущие фильтры</button>
+  <button onclick={() => removeAllDefault()}>Очистить фильтры по умолчанию</button>
 </div>
 
 <style>
@@ -141,13 +150,13 @@ onMount(async () => {
   .ignore-item {
     display: flex;
     align-items: center;
-    gap: 8px;
   }
 
   .ignore-input {
     flex: 1;
-    padding: 6px 10px;
     font-size: 14px;
+	padding-left: 5px;
+	margin: 0;
   }
 
   .remove-btn {

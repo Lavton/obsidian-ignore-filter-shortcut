@@ -12,13 +12,13 @@ export default class IgnoreFiltersPlugin extends Plugin {
 
 
 		// This adds a simple command that can be triggered anywhere
-		this.addCommand({
-			id: 'open-ignore-filters-modal',
-			name: 'Open Ignore Filters Choose',
-			callback: () => {
-				new SuggestFilterModal(this.settings.ignoreFilters, this.settings.basicIgnores, this.app).open();
-			}
-		});
+		// this.addCommand({
+		// 	id: 'open-ignore-filters-modal',
+		// 	name: 'Open Ignore Filters Choose',
+		// 	callback: () => {
+		// 		new SuggestFilterModal(this.settings.ignoreFilters, this.settings.basicIgnores, this.app).open();
+		// 	}
+		// });
 
 		// This adds a settings tab so the user can configure various aspects of the plugin
 		this.addSettingTab(new IgnoreFiltersSettingTab(this.app, this));
@@ -75,18 +75,18 @@ class IgnoreFiltersSettingTab extends PluginSettingTab {
 		// 				await this.plugin.saveSettings();
 		// 			})
 		// 	})
-		new Setting(containerEl)
-			.setName('ignored filters')
-			.setDesc('list of ignored filters. Separate by black line')
-			.addTextArea((text) => {
-				text.inputEl.style.height = "300px";
-				text.inputEl.style.width = "100%";
-				text
-					.setValue(settings.ignoreFiltersToStr(this.plugin.settings))
-					.onChange(async (value) => {
-						this.plugin.settings.ignoreFilters = settings.ignoreFiltersToList(value)
-						await this.plugin.saveSettings();
-					})
-			})
+		// new Setting(containerEl)
+		// 	.setName('ignored filters')
+		// 	.setDesc('list of ignored filters. Separate by black line')
+		// 	.addTextArea((text) => {
+		// 		text.inputEl.style.height = "300px";
+		// 		text.inputEl.style.width = "100%";
+		// 		text
+		// 			.setValue(settings.ignoreFiltersToStr(this.plugin.settings))
+		// 			.onChange(async (value) => {
+		// 				this.plugin.settings.ignoreFilters = settings.ignoreFiltersToList(value)
+		// 				await this.plugin.saveSettings();
+		// 			})
+		// 	})
 	}
 }
