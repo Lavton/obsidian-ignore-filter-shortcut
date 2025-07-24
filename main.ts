@@ -3,6 +3,7 @@ import * as settings from 'src/settings'
 import { SuggestFilterModal } from 'src/chooseModal';
 import SettingsS from './src/SettingsS.svelte';
 import { mount, unmount } from 'svelte';
+import { getIgnorenceNotice, setIgnorence } from 'src/utils';
 
 export default class IgnoreFiltersPlugin extends Plugin {
 	settings: settings.IgnoreFilterSettings;
@@ -22,6 +23,15 @@ export default class IgnoreFiltersPlugin extends Plugin {
 
 		// This adds a settings tab so the user can configure various aspects of the plugin
 		this.addSettingTab(new IgnoreFiltersSettingTab(this.app, this));
+		this.addCommand({
+			id: 'switch-to-default-ignorence',
+			name: 'return ignore filters to default',
+			callback: () => {
+				const defaultIgnore = this.settings.basicIgnores
+				setIgnorence(this.app, defaultIgnore)
+				getIgnorenceNotice(defaultIgnore)
+			}
+		});
 
 		// If the plugin hooks up any global DOM events (on parts of the app that doesn't belong to this plugin)
 	}
