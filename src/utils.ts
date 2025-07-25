@@ -6,7 +6,7 @@ export async function getAllDirs(app: App): Promise<Set<string>> {
 	const dirs = new Set<string>();
 
 	// Добавляем корневую папку
-	dirs.add("./");
+	// dirs.add("./");
 
 	const files = app.vault.getAllLoadedFiles();
 

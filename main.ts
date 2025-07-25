@@ -1,9 +1,10 @@
-import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian';
+import { App, Menu, TFolder, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian';
 import * as settings from 'src/settings'
 import { SuggestFilterModal } from 'src/chooseModal';
 import SettingsS from './src/SettingsS.svelte';
 import { mount, unmount } from 'svelte';
 import { getIgnorenceNotice, setIgnorence } from 'src/utils';
+import { addToIgnorance, canBeAddedToIgnorance } from 'src/ignorenceCalc';
 
 export default class IgnoreFiltersPlugin extends Plugin {
 	settings: settings.IgnoreFilterSettings;
@@ -12,14 +13,6 @@ export default class IgnoreFiltersPlugin extends Plugin {
 		await this.loadSettings();
 
 
-		// This adds a simple command that can be triggered anywhere
-		// this.addCommand({
-		// 	id: 'open-ignore-filters-modal',
-		// 	name: 'Open Ignore Filters Choose',
-		// 	callback: () => {
-		// 		new SuggestFilterModal(this.settings.ignoreFilters, this.settings.basicIgnores, this.app).open();
-		// 	}
-		// });
 
 		// This adds a settings tab so the user can configure various aspects of the plugin
 		this.addSettingTab(new IgnoreFiltersSettingTab(this.app, this));
@@ -32,7 +25,69 @@ export default class IgnoreFiltersPlugin extends Plugin {
 				getIgnorenceNotice(defaultIgnore)
 			}
 		});
+		this.registerEvent(
+			this.app.workspace.on("file-menu", (menu: Menu, file) => {
+				// Если выбран не файл, а папка
+				if (!(file instanceof TFolder)) return;
 
+				// Добавить пункт "Добавить папку в игнорируемое"
+				const dirpath = file.path + "/"
+				// @ts-ignore
+				const ignoreList = this.app.vault.getConfig("userIgnoreFilters");
+				if (canBeAddedToIgnorance(dirpath, ignoreList)) {
+				 // if (true) {
+					menu.addItem((item) => {
+						item.setTitle("add to ignore list")
+							.setIcon("eye-off")
+							.onClick(() => {
+								const newIgnorance = addToIgnorance(dirpath, ignoreList, this.settings.basicIgnores)
+								setIgnorence(this.app, newIgnorance)
+								getIgnorenceNotice(newIgnorance)
+
+								// this.ignoredFolders.add(file.path);
+
+								// new Notice(`Папка "${file.name}" добавлена в игнорируемое.`);
+							});
+					});
+				}
+
+				// Добавить пункт "Убрать папку из игнорируемого"
+				//if (this.ignoredFolders.has(file.path)) {
+				if (true) {
+					menu.addItem((item) => {
+						item.setTitle("Убрать папку из игнорируемого")
+							.setIcon("eye")
+							.onClick(() => {
+								//      this.ignoredFolders.delete(file.path);
+								new Notice(`Папка "${file.name}" убрана из игнорируемого.`);
+							});
+					});
+				}
+
+				// Добавить пункт "Добавить всё кроме этой папки в игнорируемое"
+				menu.addItem((item) => {
+					item.setTitle("Добавить всё кроме этой папки в игнорируемое")
+						.setIcon("minus-circle")
+						.onClick(() => {
+							const root = this.app.vault.getRoot();
+							const queue: TFolder[] = [root];
+							// this.ignoredFolders.clear();
+							while (queue.length > 0) {
+								const folder = queue.pop();
+								if (!folder) continue;
+								// if(folder.path !== file.path)
+								//   this.ignoredFolders.add(folder.path);
+								for (const child of folder.children) {
+									if (child instanceof TFolder) {
+										queue.push(child);
+									}
+								}
+							}
+							new Notice(`Все папки кроме "${file.name}" добавлены в игнорируемое.`);
+						});
+				});
+			})
+		);
 		// If the plugin hooks up any global DOM events (on parts of the app that doesn't belong to this plugin)
 	}
 
@@ -45,7 +100,7 @@ export default class IgnoreFiltersPlugin extends Plugin {
 		const currentIgnoreFilters: Array<string> = this.app.vault.getConfig("userIgnoreFilters");
 		const newDefaultSettings: settings.IgnoreFilterSettings = {
 			...settings.DEFAULT_SETTINGS,
-			basicIgnores: currentIgnoreFilters		
+			basicIgnores: currentIgnoreFilters
 		};
 		this.settings = Object.assign({}, newDefaultSettings, await this.loadData());
 	}
