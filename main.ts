@@ -3,8 +3,8 @@ import * as settings from 'src/settings'
 import { SuggestFilterModal } from 'src/chooseModal';
 import SettingsS from './src/SettingsS.svelte';
 import { mount, unmount } from 'svelte';
-import { createSettingExplainFragment, getIgnorenceNotice, setIgnorence } from 'src/utils';
-import { addToIgnorance, canBeAddedToIgnorance, isThisDirInIgnoreList, pureAddToIgnorance, pureRemoveFromIgnorance } from 'src/ignorenceCalc';
+import { createSettingExplainFragment, getIgnorenceNotice, getRemovedNotice, setIgnorence } from 'src/utils';
+import { addToIgnorance, canBeAddedToIgnorance, isChildrenOfThisDirInIgnoreList, isParentOfThisDirInIgnoreList, isThisDirInIgnoreList, pureAddToIgnorance, pureRemoveFromIgnorance } from 'src/ignorenceCalc';
 
 export default class IgnoreFiltersPlugin extends Plugin {
 	settings: settings.IgnoreFilterSettings;
@@ -35,30 +35,73 @@ export default class IgnoreFiltersPlugin extends Plugin {
 				// @ts-ignore
 				const ignoreList = this.app.vault.getConfig("userIgnoreFilters");
 				const isItInList = isThisDirInIgnoreList(dirpath, ignoreList);
+				const isParentInList = isParentOfThisDirInIgnoreList(dirpath, ignoreList);
+				const isChildrenInList = isChildrenOfThisDirInIgnoreList(dirpath, ignoreList);
 
-				// add when just add 
-				if (!this.settings.lookAtTree && !isItInList) {
-					menu.addItem((item) => {
-						item.setTitle("Add folder to ignore list")
-							.setIcon("eye-off")
-							.onClick(() => {
-								const newIgnorance = pureAddToIgnorance(dirpath, ignoreList)
-								setIgnorence(this.app, newIgnorance)
-								getIgnorenceNotice(newIgnorance)
-							});
-					});
+				if (!this.settings.lookAtTree) {
+					if (isItInList) {
+						menu.addItem((item) => {
+							item.setTitle("Remove folder from ignore list")
+								.setIcon("eye")
+								.onClick(() => {
+									const newIgnorance = pureRemoveFromIgnorance(dirpath, ignoreList)
+									setIgnorence(this.app, newIgnorance)
+									getIgnorenceNotice(newIgnorance)
+								});
+						});
+					} else {
+						menu.addItem((item) => {
+							item.setTitle("Add folder to ignore list")
+								.setIcon("eye-off")
+								.onClick(() => {
+									const newIgnorance = pureAddToIgnorance(dirpath, ignoreList)
+									setIgnorence(this.app, newIgnorance)
+									getIgnorenceNotice(newIgnorance)
+								});
+						});
+					}
+
+				} else {
+					// adding 
+					if (isParentInList || isItInList) {
+						// pass, don't do anything
+					} else if (!isChildrenInList) {
+						menu.addItem((item) => {
+							item.setTitle("Add folder to ignore list")
+								.setIcon("eye-off")
+								.onClick(() => {
+									const newIgnorance = pureAddToIgnorance(dirpath, ignoreList)
+									setIgnorence(this.app, newIgnorance)
+									getIgnorenceNotice(newIgnorance)
+								});
+						});
+					} else {
+						// add this, but remove subs
+						menu.addItem((item) => {
+							item.setTitle("Add folder to ignore list (+remove subfolders)")
+								.setIcon("eye-off")
+								.onClick(() => {
+									const newI = addToIgnorance(dirpath, ignoreList, this.settings.basicIgnores)
+									const newIgnorance = newI.ignoreList
+									const whatDeleted = newI.whatDeleted
+									
+									setIgnorence(this.app, newIgnorance)
+									getRemovedNotice(whatDeleted)
+									getIgnorenceNotice(newIgnorance)
+								});
+						});
+					}
+
+					// removing
 				}
-				if (!this.settings.lookAtTree && isItInList) {
-					menu.addItem((item) => {
-						item.setTitle("Remove folder to ignore list")
-							.setIcon("eye")
-							.onClick(() => {
-								const newIgnorance = pureRemoveFromIgnorance(dirpath, ignoreList)
-								setIgnorence(this.app, newIgnorance)
-								getIgnorenceNotice(newIgnorance)
-							});
-					});
-				}
+				// он или родитель уже в игнорируемых -> не добавить
+				// его или родителя нет в игнорируемых -> добавляем. Удаляем детей. Сообщаем что удалили. Точнее это тоже 2 варианта
+				// он в игнориуемых -> убираем
+				// его дети в игнорируемых -> убираем детей. Отдельный текст, отдельно нотификация
+				// его родитель в игнорируемых -> строим дерево, убираем его и родителя, добавляем братьев
+
+				// "убрать всё кроме" - строим дерево и вверх братьев добавляем
+
 				//if (canBeAddedToIgnorance(dirpath, ignoreList)) {
 				// // if (true) {
 				//	menu.addItem((item) => {
@@ -157,17 +200,17 @@ class IgnoreFiltersSettingTab extends PluginSettingTab {
 				settings: this.plugin.settings
 			}
 		});
-		
+
 		new Setting(containerEl)
 			.setName("Look at folder tree")
 			.setDesc(createSettingExplainFragment())
 			.addToggle(toggle => toggle
-                .setValue(this.plugin.settings.lookAtTree)
-                .onChange(async (value) => {
-                    this.plugin.settings.lookAtTree = value;
-                    await this.plugin.saveSettings();
-                })
-            );
+				.setValue(this.plugin.settings.lookAtTree)
+				.onChange(async (value) => {
+					this.plugin.settings.lookAtTree = value;
+					await this.plugin.saveSettings();
+				})
+			);
 		// new Setting(containerEl)
 		// 	// as in https://github.com/zsviczian/excalibrain/blob/master/src/Settings.ts
 		// 	.setName('default ignore filter')

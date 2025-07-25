@@ -2,14 +2,14 @@
 	import { onMount } from 'svelte';
 
   
-  let { whatIgnore }: {whatIgnore: Array<string>} = $props();
+  let { title, whatIgnore }: {title: string, whatIgnore: Array<string>} = $props();
 	displayFilters = whatIgnore.slice(0, 10);
 
 	hasMore = whatIgnore.length > 10;
 </script>
 
 <div>
-	<p>Update ignore filters. Now they are:</p>
+	<p>{title}</p>
 	<ul>
 		{#each displayFilters as filter}
 			<li>{filter}</li>

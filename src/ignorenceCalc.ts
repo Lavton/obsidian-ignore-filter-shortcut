@@ -1,3 +1,4 @@
+import { splitArrayByCondition } from "./utils";
 
 export function isThisDirInIgnoreList(currentPath: string, ignoreList: Array<string>): boolean {
 	return ignoreList.some(ignorePath => {
@@ -46,12 +47,15 @@ export function pureRemoveFromIgnorance(path: string, ignoreList: Array<string>)
 	
 }
 
-export function addToIgnorance(path: string, ignoreList: Array<string>, defaultList: Array<string>): Array<string> {
+export function addToIgnorance(path: string, ignoreList: Array<string>, defaultList: Array<string>): {
+	ignoreList: Array<string>,
+	whatDeleted: Array<string>
+} {
 	const defaultSet = new Set(defaultList);
-	let newIgnorance = ignoreList.filter(item => !item.startsWith(path) || defaultSet.has(item));
+	let [newIgnorance, whatDeleted] = splitArrayByCondition(ignoreList, item => !item.startsWith(path) || defaultSet.has(item)) 
 	newIgnorance.push(path)
 	newIgnorance.sort()
-	return newIgnorance
+	return {ignoreList: newIgnorance, whatDeleted: whatDeleted}
 }
 
 export function canBeRemovedFromIgnorance(currentPath: string, ignoreList: Array<string>): boolean {

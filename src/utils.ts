@@ -2,6 +2,24 @@ import { App, Notice, TFolder } from 'obsidian';
 import IgnoreNotice from './IgnoreNotice.svelte';
 import { mount } from 'svelte';
 
+export function splitArrayByCondition<T>(
+  data: T[],
+  condition: (item: T) => boolean
+): [T[], T[]] {
+  const passed: T[] = [];
+  const failed: T[] = [];
+
+  for (const item of data) {
+    if (condition(item)) {
+      passed.push(item);
+    } else {
+      failed.push(item);
+    }
+  }
+
+  return [passed, failed];
+}
+
 export async function getAllDirs(app: App): Promise<Set<string>> {
 	const dirs = new Set<string>();
 
@@ -39,7 +57,25 @@ export function getIgnorenceNotice(whatIgnore: Array<string>): Notice {
 	const component = mount (IgnoreNotice, {
 		target: container,
 		props: {
-			whatIgnore: whatIgnore
+			whatIgnore: whatIgnore,
+			title: "Update ignore filters. Now they are:"
+		}
+	});
+
+	const fragment = document.createDocumentFragment();
+	while (container.firstChild) {
+		fragment.appendChild(container.firstChild);
+	}
+	return new Notice(fragment, 5000);
+}
+export function getRemovedNotice(whatRemoved: Array<string>): Notice {
+	const container = document.createElement('div');
+
+	const component = mount (IgnoreNotice, {
+		target: container,
+		props: {
+			whatIgnore: whatRemoved,
+			title: "remove following subfolders from ignore list:"
 		}
 	});
 
