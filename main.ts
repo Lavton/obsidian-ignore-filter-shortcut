@@ -3,7 +3,7 @@ import * as settings from 'src/settings'
 import { SuggestFilterModal } from 'src/chooseModal';
 import SettingsS from './src/SettingsS.svelte';
 import { mount, unmount } from 'svelte';
-import { getIgnorenceNotice, setIgnorence } from 'src/utils';
+import { createSettingExplainFragment, getIgnorenceNotice, setIgnorence } from 'src/utils';
 import { addToIgnorance, canBeAddedToIgnorance } from 'src/ignorenceCalc';
 
 export default class IgnoreFiltersPlugin extends Plugin {
@@ -132,6 +132,17 @@ class IgnoreFiltersSettingTab extends PluginSettingTab {
 				settings: this.plugin.settings
 			}
 		});
+		
+		new Setting(containerEl)
+			.setName("Look at folder tree")
+			.setDesc(createSettingExplainFragment())
+			.addToggle(toggle => toggle
+                .setValue(this.plugin.settings.lookAtTree)
+                .onChange(async (value) => {
+                    this.plugin.settings.lookAtTree = value;
+                    await this.plugin.saveSettings();
+                })
+            );
 		// new Setting(containerEl)
 		// 	// as in https://github.com/zsviczian/excalibrain/blob/master/src/Settings.ts
 		// 	.setName('default ignore filter')

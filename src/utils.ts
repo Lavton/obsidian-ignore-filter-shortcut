@@ -50,3 +50,28 @@ export function getIgnorenceNotice(whatIgnore: Array<string>): Notice {
 	return new Notice(fragment, 5000);
 }
 
+export  function createSettingExplainFragment(): DocumentFragment {
+    const fragment = document.createDocumentFragment();
+    
+    const paragraph = document.createElement('p');
+    paragraph.textContent = 'When active, the plugin will look at the directory tree for ignoreList changes (if the explanation is confusing, just try it!):';
+    fragment.appendChild(paragraph);
+    
+    const list = document.createElement('ul');
+    
+    const listItem1 = document.createElement('li');
+    listItem1.innerHTML = 'if you want to remove folder <code>A</code> from the ignoreList, when it contains subfolders <code>A/B</code>, <code>A/C</code> -- these subfolders <code>A/B</code>, <code>A/C</code> will be removed';
+    list.appendChild(listItem1);
+    
+    const listItem2 = document.createElement('li');
+    listItem2.innerHTML = 'if you want to remove folder <code>A/B</code> from the ignoreList, when it contains folder <code>A</code>, then (assuming your directory tree looks like: <code>A/B</code>, <code>A/C</code>, <code>A/D</code>) the ignoreList will contain <code>A/C</code> and <code>A/D</code>: folder <code>A</code> will "break down" into subdirectories and the plugin will look at them';
+    list.appendChild(listItem2);
+    
+    const listItem3 = document.createElement('li');
+    listItem3.innerHTML = 'if you want to add folder <code>A</code> to ignored folders, when it already contains subfolder <code>A/B</code>, then path <code>A/</code> will be added to ignoreList, and <code>A/B</code> will be removed as a subpath';
+    list.appendChild(listItem3);
+    
+    fragment.appendChild(list);
+    
+    return fragment;
+}
