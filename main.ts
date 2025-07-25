@@ -4,7 +4,7 @@ import { SuggestFilterModal } from 'src/chooseModal';
 import SettingsS from './src/SettingsS.svelte';
 import { mount, unmount } from 'svelte';
 import { createSettingExplainFragment, getIgnorenceNotice, getRemovedNotice, setIgnorence } from 'src/utils';
-import { addToIgnorance, canBeAddedToIgnorance, isChildrenOfThisDirInIgnoreList, isParentOfThisDirInIgnoreList, isThisDirInIgnoreList, pureAddToIgnorance, pureRemoveFromIgnorance } from 'src/ignorenceCalc';
+import { addToIgnorance, canBeAddedToIgnorance, isChildrenOfThisDirInIgnoreList, isParentOfThisDirInIgnoreList, isThisDirInIgnoreList, pureAddToIgnorance, pureRemoveFromIgnorance, removeSubsFromIgnorance } from 'src/ignorenceCalc';
 
 export default class IgnoreFiltersPlugin extends Plugin {
 	settings: settings.IgnoreFilterSettings;
@@ -36,7 +36,7 @@ export default class IgnoreFiltersPlugin extends Plugin {
 				const ignoreList = this.app.vault.getConfig("userIgnoreFilters");
 				const isItInList = isThisDirInIgnoreList(dirpath, ignoreList);
 				const isParentInList = isParentOfThisDirInIgnoreList(dirpath, ignoreList);
-				const isChildrenInList = isChildrenOfThisDirInIgnoreList(dirpath, ignoreList);
+				const isChildrenInList = isChildrenOfThisDirInIgnoreList(dirpath, ignoreList, this.settings.basicIgnores);
 
 				if (!this.settings.lookAtTree) {
 					if (isItInList) {
@@ -93,6 +93,41 @@ export default class IgnoreFiltersPlugin extends Plugin {
 					}
 
 					// removing
+					if (isItInList) {
+						menu.addItem((item) => {
+							item.setTitle("Remove folder from ignore list")
+								.setIcon("eye")
+								.onClick(() => {
+									const newIgnorance = pureRemoveFromIgnorance(dirpath, ignoreList)
+									setIgnorence(this.app, newIgnorance)
+									getIgnorenceNotice(newIgnorance)
+								});
+						});
+					} else if (isChildrenInList) {
+						menu.addItem((item) => {
+							item.setTitle("Remove subfolders from ignore list")
+								.setIcon("eye")
+								.onClick(() => {
+									const newI = removeSubsFromIgnorance(dirpath, ignoreList, this.settings.basicIgnores)
+									const newIgnorance = newI.ignoreList
+									const whatDeleted = newI.whatDeleted
+									
+									setIgnorence(this.app, newIgnorance)
+									getRemovedNotice(whatDeleted)
+									getIgnorenceNotice(newIgnorance)
+								});
+						});
+					} else if (isParentInList) {
+						menu.addItem((item) => {
+							item.setTitle("Remove folder from ignore list (+rearange neibors)")
+								.setIcon("eye")
+								.onClick(() => {
+									const newIgnorance = pureRemoveFromIgnorance(dirpath, ignoreList)
+									setIgnorence(this.app, newIgnorance)
+									getIgnorenceNotice(newIgnorance)
+								});
+						});
+					}
 				}
 				// он или родитель уже в игнорируемых -> не добавить
 				// его или родителя нет в игнорируемых -> добавляем. Удаляем детей. Сообщаем что удалили. Точнее это тоже 2 варианта

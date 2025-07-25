@@ -13,8 +13,9 @@ export function isParentOfThisDirInIgnoreList(currentPath: string, ignoreList: A
 		return currentPath.startsWith(ignorePath);
 	});
 }
-export function isChildrenOfThisDirInIgnoreList(currentPath: string, ignoreList: Array<string>): boolean {
-	return ignoreList.some(ignorePath => {
+export function isChildrenOfThisDirInIgnoreList(currentPath: string, ignoreList: Array<string>, defaultList: Array<string>): boolean {
+	const defaultSet = new Set(defaultList);
+	return ignoreList.filter(ignorePath => !defaultSet.has(ignorePath)).some(ignorePath => {
 		if (currentPath === ignorePath) return false;
 		return ignorePath.startsWith(currentPath);
 	});
@@ -55,6 +56,14 @@ export function addToIgnorance(path: string, ignoreList: Array<string>, defaultL
 	let [newIgnorance, whatDeleted] = splitArrayByCondition(ignoreList, item => !item.startsWith(path) || defaultSet.has(item)) 
 	newIgnorance.push(path)
 	newIgnorance.sort()
+	return {ignoreList: newIgnorance, whatDeleted: whatDeleted}
+}
+export function removeSubsFromIgnorance(path: string, ignoreList: Array<string>, defaultList: Array<string>): {
+	ignoreList: Array<string>,
+	whatDeleted: Array<string>
+} {
+	const defaultSet = new Set(defaultList);
+	let [newIgnorance, whatDeleted] = splitArrayByCondition(ignoreList, item => !item.startsWith(path) || defaultSet.has(item)) 
 	return {ignoreList: newIgnorance, whatDeleted: whatDeleted}
 }
 
