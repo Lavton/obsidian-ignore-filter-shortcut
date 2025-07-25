@@ -4,7 +4,7 @@ import { SuggestFilterModal } from 'src/chooseModal';
 import SettingsS from './src/SettingsS.svelte';
 import { mount, unmount } from 'svelte';
 import { createSettingExplainFragment, getIgnorenceNotice, setIgnorence } from 'src/utils';
-import { addToIgnorance, canBeAddedToIgnorance } from 'src/ignorenceCalc';
+import { addToIgnorance, canBeAddedToIgnorance, isThisDirInIgnoreList, pureAddToIgnorance, pureRemoveFromIgnorance } from 'src/ignorenceCalc';
 
 export default class IgnoreFiltersPlugin extends Plugin {
 	settings: settings.IgnoreFilterSettings;
@@ -34,35 +34,60 @@ export default class IgnoreFiltersPlugin extends Plugin {
 				const dirpath = file.path + "/"
 				// @ts-ignore
 				const ignoreList = this.app.vault.getConfig("userIgnoreFilters");
-				if (canBeAddedToIgnorance(dirpath, ignoreList)) {
-				 // if (true) {
+				const isItInList = isThisDirInIgnoreList(dirpath, ignoreList);
+
+				// add when just add 
+				if (!this.settings.lookAtTree && !isItInList) {
 					menu.addItem((item) => {
-						item.setTitle("add to ignore list")
+						item.setTitle("Add folder to ignore list")
 							.setIcon("eye-off")
 							.onClick(() => {
-								const newIgnorance = addToIgnorance(dirpath, ignoreList, this.settings.basicIgnores)
+								const newIgnorance = pureAddToIgnorance(dirpath, ignoreList)
 								setIgnorence(this.app, newIgnorance)
 								getIgnorenceNotice(newIgnorance)
-
-								// this.ignoredFolders.add(file.path);
-
-								// new Notice(`Папка "${file.name}" добавлена в игнорируемое.`);
 							});
 					});
 				}
-
-				// Добавить пункт "Убрать папку из игнорируемого"
-				//if (this.ignoredFolders.has(file.path)) {
-				if (true) {
+				if (!this.settings.lookAtTree && isItInList) {
 					menu.addItem((item) => {
-						item.setTitle("Убрать папку из игнорируемого")
+						item.setTitle("Remove folder to ignore list")
 							.setIcon("eye")
 							.onClick(() => {
-								//      this.ignoredFolders.delete(file.path);
-								new Notice(`Папка "${file.name}" убрана из игнорируемого.`);
+								const newIgnorance = pureRemoveFromIgnorance(dirpath, ignoreList)
+								setIgnorence(this.app, newIgnorance)
+								getIgnorenceNotice(newIgnorance)
 							});
 					});
 				}
+				//if (canBeAddedToIgnorance(dirpath, ignoreList)) {
+				// // if (true) {
+				//	menu.addItem((item) => {
+				//		item.setTitle("add to ignore list")
+				//			.setIcon("eye-off")
+				//			.onClick(() => {
+				//				const newIgnorance = addToIgnorance(dirpath, ignoreList, this.settings.basicIgnores)
+				//				setIgnorence(this.app, newIgnorance)
+				//				getIgnorenceNotice(newIgnorance)
+
+				//				// this.ignoredFolders.add(file.path);
+
+				//				// new Notice(`Папка "${file.name}" добавлена в игнорируемое.`);
+				//			});
+				//	});
+				//}
+
+				//// Добавить пункт "Убрать папку из игнорируемого"
+				////if (this.ignoredFolders.has(file.path)) {
+				//if (true) {
+				//	menu.addItem((item) => {
+				//		item.setTitle("Убрать папку из игнорируемого")
+				//			.setIcon("eye")
+				//			.onClick(() => {
+				//				//      this.ignoredFolders.delete(file.path);
+				//				new Notice(`Папка "${file.name}" убрана из игнорируемого.`);
+				//			});
+				//	});
+				//}
 
 				// Добавить пункт "Добавить всё кроме этой папки в игнорируемое"
 				menu.addItem((item) => {
