@@ -1,6 +1,5 @@
 import { App, Menu, TFolder, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian';
 import * as settings from 'src/settings'
-import { SuggestFilterModal } from 'src/chooseModal';
 import SettingsS from './src/SettingsS.svelte';
 import { mount, unmount } from 'svelte';
 import { createSettingExplainFragment, getAddedNotice, getAllDirs, getIgnorenceNotice, getRemovedNotice, setIgnorence } from 'src/utils';
@@ -150,48 +149,8 @@ export default class IgnoreFiltersPlugin extends Plugin {
 							});
 					});
 				}
-				// он или родитель уже в игнорируемых -> не добавить
-				// его или родителя нет в игнорируемых -> добавляем. Удаляем детей. Сообщаем что удалили. Точнее это тоже 2 варианта
-				// он в игнориуемых -> убираем
-				// его дети в игнорируемых -> убираем детей. Отдельный текст, отдельно нотификация
-				// его родитель в игнорируемых -> строим дерево, убираем его и родителя, добавляем братьев
-
-				// "убрать всё кроме" - строим дерево и вверх братьев добавляем
-
-				//if (canBeAddedToIgnorance(dirpath, ignoreList)) {
-				// // if (true) {
-				//	menu.addItem((item) => {
-				//		item.setTitle("add to ignore list")
-				//			.setIcon("eye-off")
-				//			.onClick(() => {
-				//				const newIgnorance = addToIgnorance(dirpath, ignoreList, this.settings.basicIgnores)
-				//				setIgnorence(this.app, newIgnorance)
-				//				getIgnorenceNotice(newIgnorance)
-
-				//				// this.ignoredFolders.add(file.path);
-
-				//				// new Notice(`Папка "${file.name}" добавлена в игнорируемое.`);
-				//			});
-				//	});
-				//}
-
-				//// Добавить пункт "Убрать папку из игнорируемого"
-				////if (this.ignoredFolders.has(file.path)) {
-				//if (true) {
-				//	menu.addItem((item) => {
-				//		item.setTitle("Убрать папку из игнорируемого")
-				//			.setIcon("eye")
-				//			.onClick(() => {
-				//				//      this.ignoredFolders.delete(file.path);
-				//				new Notice(`Папка "${file.name}" убрана из игнорируемого.`);
-				//			});
-				//	});
-				//}
-
-				// Добавить пункт "Добавить всё кроме этой папки в игнорируемое"
 			})
 		);
-		// If the plugin hooks up any global DOM events (on parts of the app that doesn't belong to this plugin)
 	}
 
 	onunload() {
@@ -246,32 +205,5 @@ class IgnoreFiltersSettingTab extends PluginSettingTab {
 					await this.plugin.saveSettings();
 				})
 			);
-		// new Setting(containerEl)
-		// 	// as in https://github.com/zsviczian/excalibrain/blob/master/src/Settings.ts
-		// 	.setName('default ignore filter')
-		// 	.setDesc('what ignored always. Add one by line')
-		// 	.addTextArea((text) => {
-		// 		text.inputEl.style.height = "300px";
-		// 		text.inputEl.style.width = "100%";
-		// 		text
-		// 			.setValue(settings.basicIgnoresToStr(this.plugin.settings))
-		// 			.onChange(async (value) => {
-		// 				this.plugin.settings.basicIgnores = settings.basicFiltersToList(value)
-		// 				await this.plugin.saveSettings();
-		// 			})
-		// 	})
-		// new Setting(containerEl)
-		// 	.setName('ignored filters')
-		// 	.setDesc('list of ignored filters. Separate by black line')
-		// 	.addTextArea((text) => {
-		// 		text.inputEl.style.height = "300px";
-		// 		text.inputEl.style.width = "100%";
-		// 		text
-		// 			.setValue(settings.ignoreFiltersToStr(this.plugin.settings))
-		// 			.onChange(async (value) => {
-		// 				this.plugin.settings.ignoreFilters = settings.ignoreFiltersToList(value)
-		// 				await this.plugin.saveSettings();
-		// 			})
-		// 	})
 	}
 }
