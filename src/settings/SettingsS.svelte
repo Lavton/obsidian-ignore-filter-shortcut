@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { getAllDirs, setIgnorence, getIgnorenceNotice } from "./utils"
+  import { getAllDirs, setIgnoreFilters, getIgnorenceNotice } from "../utils"
   
   // Пропсы от плагина
   interface Props {

@@ -1,11 +1,9 @@
 import { App, Menu, TFolder, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian';
-import * as settings from 'src/settings'
-import SettingsS from './src/SettingsS.svelte';
-import { mount, unmount } from 'svelte';
-import { createSettingExplainFragment, getAddedNotice, getAllDirs, getIgnorenceNotice, getRemovedNotice, setIgnorence } from 'src/utils';
+import * as settings from 'src/settings/settingsObs'
+import { createSettingExplainFragment, getAddedNotice, getAllDirs, getIgnorenceNotice, getRemovedNotice, setIgnoreFilters } from 'src/utils';
 import { addEverythingExсept, addToIgnorance, canBeAddedToIgnorance, isChildrenOfThisDirInIgnoreList, isParentOfThisDirInIgnoreList, isThisDirInIgnoreList, pureAddToIgnorance, pureRemoveFromIgnorance, removeOnParentFromIgnorance, removeSubsFromIgnorance } from 'src/ignorenceCalc';
 
-export default class IgnoreFiltersPlugin extends Plugin {
+export default class IgnoreFiltersPlugin extends Plugin implements settings.SettingsSaver {
 	settings: settings.IgnoreFilterSettings;
 
 	async onload() {
@@ -14,13 +12,13 @@ export default class IgnoreFiltersPlugin extends Plugin {
 
 
 		// This adds a settings tab so the user can configure various aspects of the plugin
-		this.addSettingTab(new IgnoreFiltersSettingTab(this.app, this));
+		this.addSettingTab(new settings.IgnoreFiltersSettingTab(this.app, this));
 		this.addCommand({
 			id: 'switch-to-default-ignorence',
 			name: 'return ignore filters to default',
 			callback: () => {
 				const defaultIgnore = this.settings.basicIgnores
-				setIgnorence(this.app, defaultIgnore)
+				setIgnoreFilters(this.app, defaultIgnore)
 				getIgnorenceNotice(defaultIgnore)
 			}
 		});
@@ -44,7 +42,7 @@ export default class IgnoreFiltersPlugin extends Plugin {
 								.setIcon("eye")
 								.onClick(() => {
 									const newIgnorance = pureRemoveFromIgnorance(dirpath, ignoreList)
-									setIgnorence(this.app, newIgnorance)
+									setIgnoreFilters(this.app, newIgnorance)
 									getIgnorenceNotice(newIgnorance)
 								});
 						});
@@ -54,7 +52,7 @@ export default class IgnoreFiltersPlugin extends Plugin {
 								.setIcon("eye-off")
 								.onClick(() => {
 									const newIgnorance = pureAddToIgnorance(dirpath, ignoreList)
-									setIgnorence(this.app, newIgnorance)
+									setIgnoreFilters(this.app, newIgnorance)
 									getIgnorenceNotice(newIgnorance)
 								});
 						});
@@ -70,7 +68,7 @@ export default class IgnoreFiltersPlugin extends Plugin {
 								.setIcon("eye-off")
 								.onClick(() => {
 									const newIgnorance = pureAddToIgnorance(dirpath, ignoreList)
-									setIgnorence(this.app, newIgnorance)
+									setIgnoreFilters(this.app, newIgnorance)
 									getIgnorenceNotice(newIgnorance)
 								});
 						});
@@ -84,7 +82,7 @@ export default class IgnoreFiltersPlugin extends Plugin {
 									const newIgnorance = newI.ignoreList
 									const whatDeleted = newI.whatDeleted
 
-									setIgnorence(this.app, newIgnorance)
+									setIgnoreFilters(this.app, newIgnorance)
 									getRemovedNotice(whatDeleted)
 									getIgnorenceNotice(newIgnorance)
 								});
@@ -98,7 +96,7 @@ export default class IgnoreFiltersPlugin extends Plugin {
 								.setIcon("eye")
 								.onClick(() => {
 									const newIgnorance = pureRemoveFromIgnorance(dirpath, ignoreList)
-									setIgnorence(this.app, newIgnorance)
+									setIgnoreFilters(this.app, newIgnorance)
 									getIgnorenceNotice(newIgnorance)
 								});
 						});
@@ -111,7 +109,7 @@ export default class IgnoreFiltersPlugin extends Plugin {
 									const newIgnorance = newI.ignoreList
 									const whatDeleted = newI.whatDeleted
 
-									setIgnorence(this.app, newIgnorance)
+									setIgnoreFilters(this.app, newIgnorance)
 									getRemovedNotice(whatDeleted)
 									getIgnorenceNotice(newIgnorance)
 								});
@@ -126,7 +124,7 @@ export default class IgnoreFiltersPlugin extends Plugin {
 									const whatDeleted = newI.whatDeleted
 									const whatAdded = newI.whatAdded
 
-									setIgnorence(this.app, newIgnorance)
+									setIgnoreFilters(this.app, newIgnorance)
 									getRemovedNotice(whatDeleted)
 									getAddedNotice(whatAdded)
 									getIgnorenceNotice(newIgnorance)
@@ -142,7 +140,7 @@ export default class IgnoreFiltersPlugin extends Plugin {
 								const whatDeleted = newI.whatDeleted
 								const whatAdded = newI.whatAdded
 
-								setIgnorence(this.app, newIgnorance)
+								setIgnoreFilters(this.app, newIgnorance)
 								getRemovedNotice(whatDeleted)
 								getAddedNotice(whatAdded)
 								getIgnorenceNotice(newIgnorance)
@@ -169,41 +167,5 @@ export default class IgnoreFiltersPlugin extends Plugin {
 
 	async saveSettings() {
 		await this.saveData(this.settings);
-	}
-}
-
-
-class IgnoreFiltersSettingTab extends PluginSettingTab {
-	plugin: IgnoreFiltersPlugin;
-
-	constructor(app: App, plugin: IgnoreFiltersPlugin) {
-		super(app, plugin);
-		this.plugin = plugin;
-	}
-
-	display(): void {
-		const { containerEl } = this;
-
-		containerEl.empty();
-
-		console.log(this.plugin)
-		const settingsComponent = mount(SettingsS, {
-			target: containerEl,
-			props: {
-				plugin: this.plugin,
-				settings: this.plugin.settings
-			}
-		});
-
-		new Setting(containerEl)
-			.setName("Look at folder tree")
-			.setDesc(createSettingExplainFragment())
-			.addToggle(toggle => toggle
-				.setValue(this.plugin.settings.lookAtTree)
-				.onChange(async (value) => {
-					this.plugin.settings.lookAtTree = value;
-					await this.plugin.saveSettings();
-				})
-			);
 	}
 }
