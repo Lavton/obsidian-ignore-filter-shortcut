@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { getAllDirs } from "./utils"
+  import { getAllDirs, setIgnorence, getIgnorenceNotice } from "./utils"
   
   // Пропсы от плагина
   interface Props {
@@ -41,6 +41,10 @@
 	settings.basicIgnores = basicIgnores;
 	await saveSettings();
   }
+  async function putCurrent() {
+	setIgnorence(plugin.app, basicIgnores) 
+	getIgnorenceNotice(basicIgnores)
+  }
   // Автосохранение при изменении
   async function removeItem(index) {
 	basicIgnores = basicIgnores.filter((_, i) => i !== index);
@@ -51,7 +55,7 @@
 
 onMount(async () => {
     try {
-      folders = await getAllDirs(plugin.app);
+      folders = getAllDirs(plugin.app);
     } catch (error) {
       console.error('Ошибка при загрузке папок:', error);
     }
@@ -104,6 +108,7 @@ onMount(async () => {
   {#if basicIgnores.length > 0}
   <button onclick={() => removeAllDefault()}>clear the list above</button>
   {/if}
+<button onclick={() => putCurrent()}> Put current defaults to ignore list</button>
 </div>
 
 <style>

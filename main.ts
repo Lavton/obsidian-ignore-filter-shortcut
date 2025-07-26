@@ -3,8 +3,8 @@ import * as settings from 'src/settings'
 import { SuggestFilterModal } from 'src/chooseModal';
 import SettingsS from './src/SettingsS.svelte';
 import { mount, unmount } from 'svelte';
-import { createSettingExplainFragment, getIgnorenceNotice, getRemovedNotice, setIgnorence } from 'src/utils';
-import { addToIgnorance, canBeAddedToIgnorance, isChildrenOfThisDirInIgnoreList, isParentOfThisDirInIgnoreList, isThisDirInIgnoreList, pureAddToIgnorance, pureRemoveFromIgnorance, removeSubsFromIgnorance } from 'src/ignorenceCalc';
+import { createSettingExplainFragment, getAddedNotice, getAllDirs, getIgnorenceNotice, getRemovedNotice, setIgnorence } from 'src/utils';
+import { addEverythingExсept, addToIgnorance, canBeAddedToIgnorance, isChildrenOfThisDirInIgnoreList, isParentOfThisDirInIgnoreList, isThisDirInIgnoreList, pureAddToIgnorance, pureRemoveFromIgnorance, removeOnParentFromIgnorance, removeSubsFromIgnorance } from 'src/ignorenceCalc';
 
 export default class IgnoreFiltersPlugin extends Plugin {
 	settings: settings.IgnoreFilterSettings;
@@ -84,7 +84,7 @@ export default class IgnoreFiltersPlugin extends Plugin {
 									const newI = addToIgnorance(dirpath, ignoreList, this.settings.basicIgnores)
 									const newIgnorance = newI.ignoreList
 									const whatDeleted = newI.whatDeleted
-									
+
 									setIgnorence(this.app, newIgnorance)
 									getRemovedNotice(whatDeleted)
 									getIgnorenceNotice(newIgnorance)
@@ -111,7 +111,7 @@ export default class IgnoreFiltersPlugin extends Plugin {
 									const newI = removeSubsFromIgnorance(dirpath, ignoreList, this.settings.basicIgnores)
 									const newIgnorance = newI.ignoreList
 									const whatDeleted = newI.whatDeleted
-									
+
 									setIgnorence(this.app, newIgnorance)
 									getRemovedNotice(whatDeleted)
 									getIgnorenceNotice(newIgnorance)
@@ -122,12 +122,33 @@ export default class IgnoreFiltersPlugin extends Plugin {
 							item.setTitle("Remove folder from ignore list (+rearange neibors)")
 								.setIcon("eye")
 								.onClick(() => {
-									const newIgnorance = pureRemoveFromIgnorance(dirpath, ignoreList)
+									const newI = removeOnParentFromIgnorance(dirpath, ignoreList, [...getAllDirs(this.app)])
+									const newIgnorance = newI.ignoreList
+									const whatDeleted = newI.whatDeleted
+									const whatAdded = newI.whatAdded
+
 									setIgnorence(this.app, newIgnorance)
+									getRemovedNotice(whatDeleted)
+									getAddedNotice(whatAdded)
 									getIgnorenceNotice(newIgnorance)
 								});
 						});
 					}
+					menu.addItem((item) => {
+						item.setTitle("Add everything except this folder to ignore list")
+							.setIcon("minus-circle")
+							.onClick(() => {
+								const newI = addEverythingExсept(dirpath, ignoreList, this.settings.basicIgnores, [...getAllDirs(this.app)])
+								const newIgnorance = newI.ignoreList
+								const whatDeleted = newI.whatDeleted
+								const whatAdded = newI.whatAdded
+
+								setIgnorence(this.app, newIgnorance)
+								getRemovedNotice(whatDeleted)
+								getAddedNotice(whatAdded)
+								getIgnorenceNotice(newIgnorance)
+							});
+					});
 				}
 				// он или родитель уже в игнорируемых -> не добавить
 				// его или родителя нет в игнорируемых -> добавляем. Удаляем детей. Сообщаем что удалили. Точнее это тоже 2 варианта
@@ -168,27 +189,6 @@ export default class IgnoreFiltersPlugin extends Plugin {
 				//}
 
 				// Добавить пункт "Добавить всё кроме этой папки в игнорируемое"
-				menu.addItem((item) => {
-					item.setTitle("Добавить всё кроме этой папки в игнорируемое")
-						.setIcon("minus-circle")
-						.onClick(() => {
-							const root = this.app.vault.getRoot();
-							const queue: TFolder[] = [root];
-							// this.ignoredFolders.clear();
-							while (queue.length > 0) {
-								const folder = queue.pop();
-								if (!folder) continue;
-								// if(folder.path !== file.path)
-								//   this.ignoredFolders.add(folder.path);
-								for (const child of folder.children) {
-									if (child instanceof TFolder) {
-										queue.push(child);
-									}
-								}
-							}
-							new Notice(`Все папки кроме "${file.name}" добавлены в игнорируемое.`);
-						});
-				});
 			})
 		);
 		// If the plugin hooks up any global DOM events (on parts of the app that doesn't belong to this plugin)
