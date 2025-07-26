@@ -1,6 +1,6 @@
 import { App, Menu, TFolder, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian';
 import * as settings from 'src/settings/settingsObs'
-import { createSettingExplainFragment, getAddedNotice, getAllDirs, getIgnorenceNotice, getRemovedNotice, setIgnoreFilters } from 'src/utils';
+import { createSettingExplainFragment, getAddedNotice, getAllDirs, getIgnoreList, getIgnorenceNotice, getRemovedNotice, setIgnoreFilters } from 'src/utils';
 import { addEverythingExсept, addToIgnorance, canBeAddedToIgnorance, isChildrenOfThisDirInIgnoreList, isParentOfThisDirInIgnoreList, isThisDirInIgnoreList, pureAddToIgnorance, pureRemoveFromIgnorance, removeOnParentFromIgnorance, removeSubsFromIgnorance } from 'src/ignorenceCalc';
 
 export default class IgnoreFiltersPlugin extends Plugin implements settings.SettingsSaver {
@@ -156,13 +156,20 @@ export default class IgnoreFiltersPlugin extends Plugin implements settings.Sett
 	}
 
 	async loadSettings() {
-		// @ts-ignore
-		const currentIgnoreFilters: Array<string> = this.app.vault.getConfig("userIgnoreFilters");
+		const newDefaultSettings = this.changeDefaultIgnoreSettingsToCurrent();
+		this.settings = Object.assign({}, newDefaultSettings, await this.loadData());
+	}
+
+	/**
+	* use as "default settings" not empty, but current user's settings. 
+	*/
+	private changeDefaultIgnoreSettingsToCurrent(): settings.IgnoreFilterSettings {
+		const currentIgnoreFilters: Array<string> = getIgnoreList(this.app);
 		const newDefaultSettings: settings.IgnoreFilterSettings = {
 			...settings.DEFAULT_SETTINGS,
 			basicIgnores: currentIgnoreFilters
 		};
-		this.settings = Object.assign({}, newDefaultSettings, await this.loadData());
+		return newDefaultSettings;
 	}
 
 	async saveSettings() {

@@ -1,9 +1,8 @@
-import type IgnoreFiltersPlugin from "main";
 import { App, Plugin, PluginSettingTab, Setting } from "obsidian";
 import { mount } from "svelte";
 
 import SettingsS from './SettingsS.svelte';
-import { createSettingExplainFragment } from "src/utils";
+import { createSettingExplainFragment, getAllDirs, getIgnoreList, setIgnoreFilters } from "src/utils";
 
 export interface IgnoreFilterSettings {
 	basicIgnores: Array<string>;
@@ -39,8 +38,16 @@ export class IgnoreFiltersSettingTab extends PluginSettingTab {
 		const settingsComponent = mount(SettingsS, {
 			target: containerEl,
 			props: {
-				plugin: this.plugin,
-				settings: this.plugin.settings
+				settings: this.plugin.settings.basicIgnores,
+				saveSettings: async (settings: Array<string>) => {
+					this.plugin.settings.basicIgnores = settings
+					await this.plugin.saveSettings();
+				},
+				setIgnoreFilters: (whatIgnore: Array<String>) => {
+					setIgnoreFilters(this.app, whatIgnore)
+				},
+				getIgnoreList: () => getIgnoreList(this.app),
+				allDirs: [...getAllDirs(this.app)],
 			}
 		});
 

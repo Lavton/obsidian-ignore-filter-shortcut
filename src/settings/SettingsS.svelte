@@ -1,65 +1,51 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
-  import { getAllDirs, setIgnoreFilters, getIgnorenceNotice } from "../utils"
-  
-  // Пропсы от плагина
-  interface Props {
-    plugin: any;
-	settings: any; 
-}
-  
-  let { plugin, settings }: Props = $props();
-  
-  let inputText = $state('');
-  let folders = $state([]);
-  let basicIgnores = $state(settings.basicIgnores || [])
-  
-  // Функция для сохранения настроек
-  async function saveSettings() {
-	settings.basicIgnores.sort()
-    await plugin.saveSettings();
-  }
-  async function addItem() {
-  if (inputText.trim() === "") return;
-  if (basicIgnores.includes(inputText)) return;
-	basicIgnores.push(inputText);
-	basicIgnores.sort();
-	settings.basicIgnores = basicIgnores
-	inputText = ""
-	await saveSettings();
-  }
-  
-  async function addCurrentToDefault() {
-	const ignoreFilters = plugin.app.vault.getConfig("userIgnoreFilters")
-	basicIgnores = [...new Set([...basicIgnores, ...ignoreFilters])].sort();
-	settings.basicIgnores = basicIgnores
+	import {getIgnorenceNotice} from 'src/utils'
 
-	await saveSettings();
-  }
-  async function removeAllDefault() {
-	basicIgnores = []
-	settings.basicIgnores = basicIgnores;
-	await saveSettings();
-  }
-  async function putCurrent() {
-	setIgnorence(plugin.app, basicIgnores) 
-	getIgnorenceNotice(basicIgnores)
-  }
+	interface Props {
+		allDirs: Array<string>;
+		settings: Array<string>;
+		saveSettings(settings: Array<string>): Promise<void>;
+		getIgnoreList(): Array<string>;
+		setIgnoreFilters(whatIgnore: Array<string>);
+	}
+  
+	let { allDirs, settings, saveSettings, getIgnoreList, setIgnoreFilters }: Props = $props();
+
+	let inputText = $state('');
+	let folders = allDirs;
+	let basicIgnores = $state(settings || [])
+  
+	async function addItem() {
+		if (inputText.trim() === "") return;
+		if (basicIgnores.includes(inputText)) return;
+		basicIgnores.push(inputText);
+		basicIgnores.sort();
+		inputText = ""
+		await saveSettings(basicIgnores);
+	}
+  
+	async function addCurrentToDefault() {
+		const ignoreFilters = getIgnoreList();
+		basicIgnores = [...new Set([...basicIgnores, ...ignoreFilters])]
+		basicIgnores.sort();
+
+		await saveSettings(basicIgnores);
+	}
+
+	async function removeAllDefault() {
+		basicIgnores = []
+		await saveSettings(basicIgnores);
+	}
+	async function putCurrent() {
+		setIgnoreFilters(basicIgnores)
+		getIgnorenceNotice(basicIgnores)
+	}
   // Автосохранение при изменении
   async function removeItem(index) {
 	basicIgnores = basicIgnores.filter((_, i) => i !== index);
-	settings.basicIgnores = basicIgnores
-	settings.basicIgnores.sort()
-	await plugin.saveSettings();
+	await saveSettings(basicIgnores);
   }
 
-onMount(async () => {
-    try {
-      folders = getAllDirs(plugin.app);
-    } catch (error) {
-      console.error('Ошибка при загрузке папок:', error);
-    }
-  });
 
 </script>
 
@@ -96,13 +82,14 @@ onMount(async () => {
         list="folders-list"
 		onkeydown={(e) => e.key === 'Enter' && addItem()} 
       />
+
       <datalist id="folders-list">
-        {#each Array.from(folders) as folder}
+        {#each folders as folder}
           <option value={folder}></option>
         {/each}
       </datalist>
     </div>
-{#if plugin.app.vault.getConfig("userIgnoreFilters")?.length > 0}
+{#if getIgnoreList().length > 0}
   <button onclick={() => addCurrentToDefault()}>Add current ignore list to default</button>
   {/if}
   {#if basicIgnores.length > 0}
