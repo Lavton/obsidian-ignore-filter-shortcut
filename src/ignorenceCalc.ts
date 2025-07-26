@@ -106,12 +106,11 @@ export function addEverythingExсept(path: string, ignoreList: Array<string>, de
 	// добавляем все руты
 	// для нужного рута проделываем спуск как раньше
 	// аккуратно смотрим что изменилось
-	const defaultSet = new Set(defaultList.filter(d => !path.startsWith(d)));
+	const defaultSet = new Set(defaultList.filter(d => !path.startsWith(d))); // родители path будут исключены, даже если они есть
 
 	// если path в defaultList - мы всё равно его убираем.
 	// defaultSet.delete(path);
-	let [newIgnorance, whatDeleted] = splitArrayByCondition(ignoreList, item => !(path.startsWith(item) || item.startsWith(path)) || defaultSet.has(item))
-	console.log({defaultSet, newIgnorance, whatDeleted})
+	let [newIgnorance, whatDeleted] = splitArrayByCondition(ignoreList, item => defaultSet.has(path))
 	const roots = getRoots(allDirs);
 	const myRoot = roots.filter(r => path.startsWith(r))[0]
 	newIgnorance = [...newIgnorance, ...roots.filter(r => r!==myRoot && !newIgnorance.includes(r))]
