@@ -3,6 +3,7 @@ import * as settings from 'src/settings/settingsObs'
 import * as menuItems from 'src/folderManipulations/menuItems'
 import {getAddedNotice, getAllDirs, getIgnoreList, getIgnorenceNotice, getRemovedNotice, setIgnoreFilters } from 'src/utils';
 import { addEverythingExсept, addToIgnorance, canBeAddedToIgnorance, isChildrenOfThisDirInIgnoreList, isParentOfThisDirInIgnoreList, isThisDirInIgnoreList, pureAddToIgnorance, pureRemoveFromIgnorance, removeOnParentFromIgnorance, removeSubsFromIgnorance } from 'src/ignorenceCalc';
+import * as dirutils from 'src/dirutils';
 
 export default class IgnoreFiltersPlugin extends Plugin implements settings.SettingsSaver {
 	settings: settings.IgnoreFilterSettings;
@@ -27,11 +28,12 @@ export default class IgnoreFiltersPlugin extends Plugin implements settings.Sett
 				// Если выбран не файл, а папка
 				if (!(file instanceof TFolder)) return;
 
-				const dirpath = file.path + "/"
+				const dirpath = dirutils.toCanonicalDir(file.path)
 				const ignoreList = getIgnoreList(this.app)
-				const isItInList = isThisDirInIgnoreList(dirpath, ignoreList);
-				const isParentInList = isParentOfThisDirInIgnoreList(dirpath, ignoreList);
-				const isChildrenInList = isChildrenOfThisDirInIgnoreList(dirpath, ignoreList, this.settings.basicIgnores);
+				const ignoreListNoDefaults = dirutils.removeSomeDirs(ignoreList, this.settings.basicIgnores)
+				const isItInList = dirutils.isDirInList(dirpath, ignoreList);
+				const isParentInList = dirutils.isParentOfDirInList(dirpath, ignoreList);
+				const isChildrenInList = dirutils.isChildrenInList(dirpath, ignoreListNoDefaults)
 
 				if (!this.settings.lookAtTree) {
 					if (isItInList) {
@@ -73,20 +75,7 @@ export default class IgnoreFiltersPlugin extends Plugin implements settings.Sett
 	}
 
 	async loadSettings() {
-		const newDefaultSettings = this.changeDefaultIgnoreSettingsToCurrent();
-		this.settings = Object.assign({}, newDefaultSettings, await this.loadData());
-	}
-
-	/**
-	* use as "default settings" not empty, but current user's settings. 
-	*/
-	private changeDefaultIgnoreSettingsToCurrent(): settings.IgnoreFilterSettings {
-		const currentIgnoreFilters: Array<string> = getIgnoreList(this.app);
-		const newDefaultSettings: settings.IgnoreFilterSettings = {
-			...settings.DEFAULT_SETTINGS,
-			basicIgnores: currentIgnoreFilters
-		};
-		return newDefaultSettings;
+		this.settings = Object.assign({}, settings.DEFAULT_SETTINGS, await this.loadData());
 	}
 
 	async saveSettings() {

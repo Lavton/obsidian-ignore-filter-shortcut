@@ -2,7 +2,7 @@ import type { App, MenuItem } from "obsidian";
 import { addEverythingExсept, addToIgnorance, pureAddToIgnorance, pureRemoveFromIgnorance, removeOnParentFromIgnorance, removeSubsFromIgnorance } from "src/ignorenceCalc";
 import { getAddedNotice, getAllDirs, getIgnorenceNotice, getRemovedNotice, setIgnoreFilters } from "src/utils";
 
-export function pureAddingToIgnoreList(item: MenuItem, dirpath: string, ignoreList: Array<string>, app: App): void {
+export function pureRemovingFromIgnoreList(item: MenuItem, dirpath: string, ignoreList: Array<string>, app: App): void {
 	item.setTitle("Remove folder from ignore list")
 		.setIcon("eye")
 		.onClick(() => {
@@ -12,7 +12,7 @@ export function pureAddingToIgnoreList(item: MenuItem, dirpath: string, ignoreLi
 		});
 }
 
-export function pureRemovingFromIgnoreList(item: MenuItem, dirpath: string, ignoreList: Array<string>, app: App): void {
+export function pureAddingToIgnoreList(item: MenuItem, dirpath: string, ignoreList: Array<string>, app: App): void {
 	item.setTitle("Add folder to ignore list")
 		.setIcon("eye-off")
 		.onClick(() => {

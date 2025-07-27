@@ -1,6 +1,7 @@
 import { App, Notice, TFolder } from 'obsidian';
 import IgnoreNotice from './IgnoreNotice.svelte';
 import { mount } from 'svelte';
+import * as dirUtils from './dirutils';
 
 export function splitArrayByCondition<T>(
 	data: T[],
@@ -30,15 +31,15 @@ export function getAllDirs(app: App): Set<string> {
 
 	for (const file of files) {
 		if (file instanceof TFolder) {
-			if (file.path !== "/") {
-				dirs.add(file.path + "/");
+			if (!dirUtils.isRawRoot(file.path)) { // root = "/"
+				dirs.add(dirUtils.toCanonicalDir(file.path));  // at the begiing it has not "/" at the end
 			}
 		}
 
 		// Добавляем все родительские папки для файлов
 		let parent = file.parent;
-		while (parent && parent.path !== "/") {
-			dirs.add(parent.path + "/");
+		while (parent && !dirUtils.isRawRoot(parent.path)) {
+			dirs.add(dirUtils.toCanonicalDir(parent.path));
 			parent = parent.parent;
 		}
 	}
