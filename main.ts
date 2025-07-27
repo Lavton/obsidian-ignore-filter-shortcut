@@ -1,4 +1,4 @@
-import { App, Menu, TFolder, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian';
+import { Menu, TFolder, Plugin } from 'obsidian';
 import * as settings from 'src/settings/settingsObs'
 import * as menuItems from 'src/folderManipulations/menuItems'
 import {getIgnoreList, setIgnoreFilters } from 'src/utils';
