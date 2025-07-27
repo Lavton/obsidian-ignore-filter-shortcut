@@ -2,7 +2,9 @@ import { App, Plugin, PluginSettingTab, Setting } from "obsidian";
 import { mount } from "svelte";
 
 import SettingsS from './SettingsS.svelte';
-import { createSettingExplainFragment, getAllDirs, getIgnoreList, setIgnoreFilters } from "src/utils";
+import {getAllDirs, getIgnoreList, setIgnoreFilters } from "src/utils";
+import { createSettingExplainFragment } from "./explain";
+
 
 export interface IgnoreFilterSettings {
 	basicIgnores: Array<string>;
