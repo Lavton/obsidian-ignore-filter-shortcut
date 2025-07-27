@@ -1,5 +1,6 @@
 import { App, Menu, TFolder, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian';
 import * as settings from 'src/settings/settingsObs'
+import * as menuItems from 'src/folderManipulations/menuItems'
 import {getAddedNotice, getAllDirs, getIgnoreList, getIgnorenceNotice, getRemovedNotice, setIgnoreFilters } from 'src/utils';
 import { addEverythingExсept, addToIgnorance, canBeAddedToIgnorance, isChildrenOfThisDirInIgnoreList, isParentOfThisDirInIgnoreList, isThisDirInIgnoreList, pureAddToIgnorance, pureRemoveFromIgnorance, removeOnParentFromIgnorance, removeSubsFromIgnorance } from 'src/ignorenceCalc';
 
@@ -8,8 +9,6 @@ export default class IgnoreFiltersPlugin extends Plugin implements settings.Sett
 
 	async onload() {
 		await this.loadSettings();
-
-
 
 		// This adds a settings tab so the user can configure various aspects of the plugin
 		this.addSettingTab(new settings.IgnoreFiltersSettingTab(this.app, this));
@@ -22,130 +21,48 @@ export default class IgnoreFiltersPlugin extends Plugin implements settings.Sett
 				getIgnorenceNotice(defaultIgnore)
 			}
 		});
+
 		this.registerEvent(
 			this.app.workspace.on("file-menu", (menu: Menu, file) => {
 				// Если выбран не файл, а папка
 				if (!(file instanceof TFolder)) return;
 
-				// Добавить пункт "Добавить папку в игнорируемое"
 				const dirpath = file.path + "/"
-				// @ts-ignore
-				const ignoreList = this.app.vault.getConfig("userIgnoreFilters");
+				const ignoreList = getIgnoreList(this.app)
 				const isItInList = isThisDirInIgnoreList(dirpath, ignoreList);
 				const isParentInList = isParentOfThisDirInIgnoreList(dirpath, ignoreList);
 				const isChildrenInList = isChildrenOfThisDirInIgnoreList(dirpath, ignoreList, this.settings.basicIgnores);
 
 				if (!this.settings.lookAtTree) {
 					if (isItInList) {
-						menu.addItem((item) => {
-							item.setTitle("Remove folder from ignore list")
-								.setIcon("eye")
-								.onClick(() => {
-									const newIgnorance = pureRemoveFromIgnorance(dirpath, ignoreList)
-									setIgnoreFilters(this.app, newIgnorance)
-									getIgnorenceNotice(newIgnorance)
-								});
-						});
+						menu.addItem((item) => menuItems.pureAddingToIgnoreList(item, dirpath, ignoreList, this.app))
 					} else {
-						menu.addItem((item) => {
-							item.setTitle("Add folder to ignore list")
-								.setIcon("eye-off")
-								.onClick(() => {
-									const newIgnorance = pureAddToIgnorance(dirpath, ignoreList)
-									setIgnoreFilters(this.app, newIgnorance)
-									getIgnorenceNotice(newIgnorance)
-								});
-						});
+						menu.addItem((item) => menuItems.pureRemovingFromIgnoreList(item, dirpath, ignoreList, this.app));
 					}
-
 				} else {
 					// adding 
 					if (isParentInList || isItInList) {
 						// pass, don't do anything
 					} else if (!isChildrenInList) {
-						menu.addItem((item) => {
-							item.setTitle("Add folder to ignore list")
-								.setIcon("eye-off")
-								.onClick(() => {
-									const newIgnorance = pureAddToIgnorance(dirpath, ignoreList)
-									setIgnoreFilters(this.app, newIgnorance)
-									getIgnorenceNotice(newIgnorance)
-								});
-						});
+						menu.addItem((item) => menuItems.pureAddingToIgnoreList(item, dirpath, ignoreList, this.app))
 					} else {
-						// add this, but remove subs
-						menu.addItem((item) => {
-							item.setTitle("Add folder to ignore list (+remove subfolders)")
-								.setIcon("eye-off")
-								.onClick(() => {
-									const newI = addToIgnorance(dirpath, ignoreList, this.settings.basicIgnores)
-									const newIgnorance = newI.ignoreList
-									const whatDeleted = newI.whatDeleted
-
-									setIgnoreFilters(this.app, newIgnorance)
-									getRemovedNotice(whatDeleted)
-									getIgnorenceNotice(newIgnorance)
-								});
-						});
+						// has subs
+						menu.addItem((item) => menuItems.addToIgnoreListRemoveSubs(item, dirpath, ignoreList, this.app, this.settings.basicIgnores))
 					}
 
 					// removing
 					if (isItInList) {
-						menu.addItem((item) => {
-							item.setTitle("Remove folder from ignore list")
-								.setIcon("eye")
-								.onClick(() => {
-									const newIgnorance = pureRemoveFromIgnorance(dirpath, ignoreList)
-									setIgnoreFilters(this.app, newIgnorance)
-									getIgnorenceNotice(newIgnorance)
-								});
-						});
+						// remove just it
+						menu.addItem((item) => menuItems.pureRemovingFromIgnoreList(item, dirpath, ignoreList, this.app));
 					} else if (isChildrenInList) {
-						menu.addItem((item) => {
-							item.setTitle("Remove subfolders from ignore list")
-								.setIcon("eye")
-								.onClick(() => {
-									const newI = removeSubsFromIgnorance(dirpath, ignoreList, this.settings.basicIgnores)
-									const newIgnorance = newI.ignoreList
-									const whatDeleted = newI.whatDeleted
-
-									setIgnoreFilters(this.app, newIgnorance)
-									getRemovedNotice(whatDeleted)
-									getIgnorenceNotice(newIgnorance)
-								});
-						});
+						// remove children 
+						menu.addItem((item) => menuItems.removeSubsFromIgnoreList(item, dirpath, ignoreList, this.app, this.settings.basicIgnores));
 					} else if (isParentInList) {
-						menu.addItem((item) => {
-							item.setTitle("Remove folder from ignore list (+rearange neibors)")
-								.setIcon("eye")
-								.onClick(() => {
-									const newI = removeOnParentFromIgnorance(dirpath, ignoreList, [...getAllDirs(this.app)])
-									const newIgnorance = newI.ignoreList
-									const whatDeleted = newI.whatDeleted
-									const whatAdded = newI.whatAdded
-
-									setIgnoreFilters(this.app, newIgnorance)
-									getRemovedNotice(whatDeleted)
-									getAddedNotice(whatAdded)
-									getIgnorenceNotice(newIgnorance)
-								});
-						});
+						// remove parent & it 
+						menu.addItem((item) => menuItems.removeParentFromIgnoreList(item, dirpath, ignoreList, this.app));
 					}
-					menu.addItem((item) => {
-						item.setTitle("Add everything except this folder to ignore list")
-							.setIcon("minus-circle")
-							.onClick(() => {
-								const newI = addEverythingExсept(dirpath, ignoreList, this.settings.basicIgnores, [...getAllDirs(this.app)])
-								const newIgnorance = newI.ignoreList
-								const whatDeleted = newI.whatDeleted
-								const whatAdded = newI.whatAdded
-
-								setIgnoreFilters(this.app, newIgnorance)
-								getRemovedNotice(whatDeleted)
-								getAddedNotice(whatAdded)
-								getIgnorenceNotice(newIgnorance)
-							});
-					});
+					// add everything except this 
+					menu.addItem((item) => menuItems.addEverythingExcept(item, dirpath, ignoreList, this.app, this.settings.basicIgnores));
 				}
 			})
 		);

@@ -53,7 +53,7 @@
 <div class="ignore-list-setting-item-info">
       <div class="ignore-list-setting-item-name">Default ignore filters</div>
       <div class="ignore-list-setting-item-description">
-	These filters will be applied when you run command "return to default"
+These filters will be applied when you run the "return to default" command and will remain in effect in case of an implicit delete.
 	  </div>
   {#if basicIgnores.length > 0}
   <button onclick={() => removeAllDefault()}>clear list</button>
