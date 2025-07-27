@@ -1,38 +1,52 @@
-# Ignore Filters shortcut
-obsidian plugin (https://obsidian.md/).
+# Ignore Filters Boost
+[Obsidian.md plugin](https://obsidian.md/) to speed up work with excluding/including folders! 
+
+👆 No need to go to settings anymore, just click at folder!
+
+## What this plugin do?
+- 👆 click at folder to add it to "excluded files"
+- 👆 click at folder to remove it from "excluded files"
+
+## Some advanced techniques?
+- Want to focus on specific folder? Click "Add everything except this folder"!
+- Want to remove folder from "excluded files", but it parents is still in the list? Plugin will automatically remove the parent and add siblings!
+- Want to remove several subfolders from "excluded files"? Just click at their parent!
+- Want to return to default? Do it in one command! 
+
+
+## 📖 Manual
+*The plugin works with folders, not files.*
+
+Set "default ignore filters" at settings. 
+![Ignore defaults](./images/ignore_defaults.png)
+- Use `Ignore Filters Boost: return ignore filters to default` command to return to this filters 
+- Plugin will not remove these folders implitly: if you as to remove subfolders of some folder from ignore list, the "default" filters will remains stable
+
+- click at `Add current ignore list to default` will add the "excluded files", that is now in your project, to "default ignore filters"
+- click at `Put current defaults to ignore list` will change "excluded files" to the list you see in this settings (same as `Ignore Filters Boost: return ignore filters to default` command)
+
+![Look at tree](./images/look_at_tree.png)
+if "Look at folder tree" is off, you'll just add or remove a folder. 
+
+![pure add](./images/pure_add.png)
+
+But when "Look at folder tree is on...
+
+![add everything](./images/add_everything.png)
+
+"add everything" and then just "ignore_2/" will return unignored. `"base/", "focusNodes/", "ignore_1/"` - all these folders will be in "excluded files". 
 
 This plugin simpify the changes in ignore filters. Add command with lists of variants of ignore filters.
 
-## goal
-The goal is to focus on some notes in specific folder in a quick way.
+![remove parent](./images/remove_parent.png)
+... and then you can remove `"ignore_1/sub_folder_1/"` from ignore list. But if list has only `"ignore_1/"`, it will be rearranged: it remove parent folder and add siblings. So now `ignore_1/sub_folder/` will be in the list :)
 
-in my case I have one folder contains notes about programming and another folder contains notes about productivity. I can add two variants in settings and then easilly switch on what I'm concentrate now: on programing or on projductivy.
 
-### package trio
-This package is invented as a part of the package trio:
-- https://github.com/Lavton/obsidian-connections-to-tag -- a package that can add to notes subtree and its connections a common hashtag
-- https://github.com/Lavton/obisidian-move-tag-to-folder -- a package that can move all notes with a common hashtag to a specific folder
-- https://github.com/Lavton/obsidian-ignore-filter-shortcut -- a package that can add a Ignore Filter variant to focus on the specific folder.
+---
 
-So, the supposed workflow of the packages is the following: 
-1. deside that you want to focus not on the whole vault, but on the specific subject
-2. find the subtree of the subject and add a hashtag to the subtree
-3. move all notes with the hashtag (so, all notes connected to the subject) to a specific folder
-4. change the ignore filters so, that only the specific folder is not ignored
-5. focus on the subject, do whatever you want to do
-6. do reverse stuff: change ignore filters to a general one, move all notes from the specific folder to their original desitnation, remove the hashtag from the notes 
+## 🔮 Future Plans 
+Some plans for the project. Feel free to ask for features by creating issues!
+- language translation. I want to add different language support
+- create "white list" of folders in duality to black (ignore filters) list
+- add workspaces. During publishing I found the [Smart Excluded Files plugin](https://github.com/vlwkaos/obsidian-smart-excluded). Had some similar ideas, so maybe I'll include the functionality here
 
-## settings
-- `default ignore filter` put there all ignore filters line by line as they would be in `files and links -> ignore filters`. This filters will be added to all mentioned in the next settings section 
-- `ignored filters` write the filter variants. Each variant must start with the `# name` and then have filters line by line. Variant must ends with a black line. You can navigate on `name`s by the plugin command. (*I know it is not user friendly, but it's just the first plugin version!*) Example:
-```# name varient 1
-path_that_will_be_ignored_1/
-path_that_will_be_ignored_2/
-
-# name varient 2
-path_that_will_be_ignored_2/
-path_that_will_be_ignored_3/
-```
-
-## commands
-- `Open Ignore Filters Choose` opens a modal, where you can choose and switch between several ignore filters
