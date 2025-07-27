@@ -1,8 +1,75 @@
-/*
+  .ignore-list-settings-container {
+    padding: 20px;
+  }
+  
+  .ignore-list-setting-item-info {
+    flex: 1;
+    margin-right: 20px;
+  }
+  
+  .ignore-list-setting-item-name {
+    font-weight: 600;
+    margin-bottom: 5px;
+  }
+  
+  .ignore-list-setting-item-description {
+    color: var(--text-muted);
+    font-size: 0.9em;
+  }
+  
+  .ignore-list-setting-item-control {
+    min-width: 200px;
+  }
+  
+  .ignore-list-text-input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--background-modifier-border);
+    border-radius: 4px;
+    background: var(--background-primary);
+    color: var(--text-normal);
+	margin-bottom: 10px;
+  }
+  
+  .ignore-list-text-input:focus {
+    outline: none;
+    border-color: var(--interactive-accent);
+	
+  }
+  
 
-This CSS file will be included with your plugin, and
-available in the app when your plugin is enabled.
+.ignore-list {
+    display: flex;
+    flex-direction: column;
+	margin-top: 10px;
+	margin-bottom: 10px;
+    gap: 8px;
+  }
 
-If your plugin does not need CSS, delete this file.
+  .ignore-item {
+    display: flex;
+    align-items: center;
+  }
 
-*/
+  .ignore-input {
+    flex: 1;
+    font-size: 14px;
+	padding-left: 5px;
+	margin: 0;
+  }
+
+  .ignore-list-remove-btn {
+    border: none;
+    border-radius: 4px;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+  }
+
+  .ignore-list-remove-btn:hover {
+    background: #ff3838;
+  }
