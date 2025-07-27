@@ -1,6 +1,7 @@
 import type { App, MenuItem } from "obsidian";
 import { addEverythingExсept, addToIgnorance, pureAddToIgnorance, pureRemoveFromIgnorance, removeOnParentFromIgnorance, removeSubsFromIgnorance } from "src/ignorenceCalc";
-import { getAddedNotice, getAllDirs, getIgnorenceNotice, getRemovedNotice, setIgnoreFilters } from "src/utils";
+import { notifyUserAboutChangesInIgnoreList, notifyUserAboutNewIgnoreList } from "src/notifiing";
+import { getAllDirs, setIgnoreFilters } from "src/utils";
 
 export function pureRemovingFromIgnoreList(item: MenuItem, dirpath: string, ignoreList: Array<string>, app: App): void {
 	item.setTitle("Remove folder from ignore list")
@@ -8,7 +9,7 @@ export function pureRemovingFromIgnoreList(item: MenuItem, dirpath: string, igno
 		.onClick(() => {
 			const newIgnorance = pureRemoveFromIgnorance(dirpath, ignoreList)
 			setIgnoreFilters(app, newIgnorance)
-			getIgnorenceNotice(newIgnorance)
+			notifyUserAboutNewIgnoreList(newIgnorance)
 		});
 }
 
@@ -18,7 +19,7 @@ export function pureAddingToIgnoreList(item: MenuItem, dirpath: string, ignoreLi
 		.onClick(() => {
 			const newIgnorance = pureAddToIgnorance(dirpath, ignoreList)
 			setIgnoreFilters(app, newIgnorance)
-			getIgnorenceNotice(newIgnorance)
+			notifyUserAboutNewIgnoreList(newIgnorance)
 		});
 }
 export function addToIgnoreListRemoveSubs(item: MenuItem, dirpath: string, ignoreList: Array<string>, app: App, basicIgnores: Array<string>): void {
@@ -30,8 +31,7 @@ export function addToIgnoreListRemoveSubs(item: MenuItem, dirpath: string, ignor
 			const whatDeleted = newI.whatDeleted
 
 			setIgnoreFilters(app, newIgnorance)
-			getRemovedNotice(whatDeleted)
-			getIgnorenceNotice(newIgnorance)
+			notifyUserAboutChangesInIgnoreList(ignoreList, newIgnorance, true, true)
 		});
 }
 export function removeSubsFromIgnoreList(item: MenuItem, dirpath: string, ignoreList: Array<string>, app: App, basicIgnores: Array<string>): void {
@@ -43,8 +43,7 @@ export function removeSubsFromIgnoreList(item: MenuItem, dirpath: string, ignore
 			const whatDeleted = newI.whatDeleted
 
 			setIgnoreFilters(app, newIgnorance)
-			getRemovedNotice(whatDeleted)
-			getIgnorenceNotice(newIgnorance)
+			notifyUserAboutChangesInIgnoreList(ignoreList, newIgnorance, true, true)
 		});
 }
 export function removeParentFromIgnoreList(item: MenuItem, dirpath: string, ignoreList: Array<string>, app: App): void {
@@ -57,9 +56,7 @@ export function removeParentFromIgnoreList(item: MenuItem, dirpath: string, igno
 			const whatAdded = newI.whatAdded
 
 			setIgnoreFilters(app, newIgnorance)
-			getRemovedNotice(whatDeleted)
-			getAddedNotice(whatAdded)
-			getIgnorenceNotice(newIgnorance)
+			notifyUserAboutChangesInIgnoreList(ignoreList, newIgnorance, true, true)
 		});
 }
 export function addEverythingExcept(item: MenuItem, dirpath: string, ignoreList: Array<string>, app: App, basicIgnores: Array<string>): void {
@@ -72,8 +69,6 @@ export function addEverythingExcept(item: MenuItem, dirpath: string, ignoreList:
 			const whatAdded = newI.whatAdded
 
 			setIgnoreFilters(app, newIgnorance)
-			getRemovedNotice(whatDeleted)
-			getAddedNotice(whatAdded)
-			getIgnorenceNotice(newIgnorance)
+			notifyUserAboutChangesInIgnoreList(ignoreList, newIgnorance, true, true)
 		});
 }

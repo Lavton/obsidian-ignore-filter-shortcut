@@ -1,5 +1,5 @@
 <script lang="ts">
-	import {getIgnorenceNotice} from 'src/utils'
+	import {notifyUserAboutNewIgnoreList} from 'src/notifiing'
 
 	interface Props {
 		allDirs: Array<string>;
@@ -38,7 +38,7 @@
 	}
 	async function putCurrent() {
 		setIgnoreFilters(basicIgnores)
-		getIgnorenceNotice(basicIgnores)
+		notifyUserAboutNewIgnoreList(basicIgnores)
 	}
   // Автосохранение при изменении
   async function removeItem(index) {

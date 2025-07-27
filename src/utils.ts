@@ -1,5 +1,5 @@
 import { App, Notice, TFolder } from 'obsidian';
-import IgnoreNotice from './IgnoreNotice.svelte';
+import IgnoreDiffNotice from './IgnoreDiffNotice.svelte';
 import { mount } from 'svelte';
 import * as dirUtils from './dirutils';
 
@@ -64,57 +64,56 @@ export function getIgnoreList(app: App): Array<string> {
 	return app.vault.getConfig("userIgnoreFilters")
 }
 
-export function getIgnorenceNotice(whatIgnore: Array<string>): Notice {
-	const container = document.createElement('div');
+// export function getIgnorenceNotice(whatIgnore: Array<string>): Notice {
+// 	const container = document.createElement('div');
 
-	const component = mount(IgnoreNotice, {
-		target: container,
-		props: {
-			whatIgnore: whatIgnore,
-			title: "Update ignore filters. Now they are:"
-		}
-	});
+// 	const component = mount(IgnoreDiffNotice, {
+// 		target: container,
+// 		props: {
+// 			newIgnoreList: whatIgnore,
+// 		}
+// 	});
 
-	const fragment = document.createDocumentFragment();
-	while (container.firstChild) {
-		fragment.appendChild(container.firstChild);
-	}
-	return new Notice(fragment, 5000);
-}
-export function getRemovedNotice(whatRemoved: Array<string>): Notice {
-	const container = document.createElement('div');
+// 	const fragment = document.createDocumentFragment();
+// 	while (container.firstChild) {
+// 		fragment.appendChild(container.firstChild);
+// 	}
+// 	return new Notice(fragment, 5000);
+// }
+// export function getRemovedNotice(whatRemoved: Array<string>): Notice {
+// 	const container = document.createElement('div');
 
-	const component = mount(IgnoreNotice, {
-		target: container,
-		props: {
-			whatIgnore: whatRemoved,
-			title: "remove following subfolders from ignore list:"
-		}
-	});
+// 	const component = mount(IgnoreNotice, {
+// 		target: container,
+// 		props: {
+// 			whatIgnore: whatRemoved,
+// 			title: "remove following subfolders from ignore list:"
+// 		}
+// 	});
 
-	const fragment = document.createDocumentFragment();
-	while (container.firstChild) {
-		fragment.appendChild(container.firstChild);
-	}
-	return new Notice(fragment, 5000);
-}
-export function getAddedNotice(whatRemoved: Array<string>): Notice {
-	const container = document.createElement('div');
+// 	const fragment = document.createDocumentFragment();
+// 	while (container.firstChild) {
+// 		fragment.appendChild(container.firstChild);
+// 	}
+// 	return new Notice(fragment, 5000);
+// }
+// export function getAddedNotice(whatRemoved: Array<string>): Notice {
+// 	const container = document.createElement('div');
 
-	const component = mount(IgnoreNotice, {
-		target: container,
-		props: {
-			whatIgnore: whatRemoved,
-			title: "add following folders to ignore list:"
-		}
-	});
+// 	const component = mount(IgnoreNotice, {
+// 		target: container,
+// 		props: {
+// 			whatIgnore: whatRemoved,
+// 			title: "add following folders to ignore list:"
+// 		}
+// 	});
 
-	const fragment = document.createDocumentFragment();
-	while (container.firstChild) {
-		fragment.appendChild(container.firstChild);
-	}
-	return new Notice(fragment, 5000);
-}
+// 	const fragment = document.createDocumentFragment();
+// 	while (container.firstChild) {
+// 		fragment.appendChild(container.firstChild);
+// 	}
+// 	return new Notice(fragment, 5000);
+// }
 
 
 export function getPathBetween(root: string, leaf: string): Array<string> {

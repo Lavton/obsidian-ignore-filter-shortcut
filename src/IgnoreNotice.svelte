@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-
   
   let { title, whatIgnore }: {title: string, whatIgnore: Array<string>} = $props();
 	displayFilters = whatIgnore.slice(0, 10);

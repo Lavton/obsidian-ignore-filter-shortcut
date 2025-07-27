@@ -1,9 +1,9 @@
 import { App, Menu, TFolder, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian';
 import * as settings from 'src/settings/settingsObs'
 import * as menuItems from 'src/folderManipulations/menuItems'
-import {getAddedNotice, getAllDirs, getIgnoreList, getIgnorenceNotice, getRemovedNotice, setIgnoreFilters } from 'src/utils';
-import { addEverythingExсept, addToIgnorance, canBeAddedToIgnorance, isChildrenOfThisDirInIgnoreList, isParentOfThisDirInIgnoreList, isThisDirInIgnoreList, pureAddToIgnorance, pureRemoveFromIgnorance, removeOnParentFromIgnorance, removeSubsFromIgnorance } from 'src/ignorenceCalc';
+import {getIgnoreList, setIgnoreFilters } from 'src/utils';
 import * as dirutils from 'src/dirutils';
+import { notifyUserAboutNewIgnoreList } from 'src/notifiing';
 
 export default class IgnoreFiltersPlugin extends Plugin implements settings.SettingsSaver {
 	settings: settings.IgnoreFilterSettings;
@@ -19,7 +19,7 @@ export default class IgnoreFiltersPlugin extends Plugin implements settings.Sett
 			callback: () => {
 				const defaultIgnore = this.settings.basicIgnores
 				setIgnoreFilters(this.app, defaultIgnore)
-				getIgnorenceNotice(defaultIgnore)
+				notifyUserAboutNewIgnoreList(defaultIgnore)
 			}
 		});
 
@@ -37,9 +37,9 @@ export default class IgnoreFiltersPlugin extends Plugin implements settings.Sett
 
 				if (!this.settings.lookAtTree) {
 					if (isItInList) {
-						menu.addItem((item) => menuItems.pureAddingToIgnoreList(item, dirpath, ignoreList, this.app))
-					} else {
 						menu.addItem((item) => menuItems.pureRemovingFromIgnoreList(item, dirpath, ignoreList, this.app));
+					} else {
+						menu.addItem((item) => menuItems.pureAddingToIgnoreList(item, dirpath, ignoreList, this.app))
 					}
 				} else {
 					// adding 
