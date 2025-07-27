@@ -1,24 +1,6 @@
 import { App, TFolder } from 'obsidian';
 import * as dirUtils from './dirutils';
 
-export function splitArrayByCondition<T>(
-	data: T[],
-	condition: (item: T) => boolean
-): [T[], T[]] {
-	const passed: T[] = [];
-	const failed: T[] = [];
-
-	for (const item of data) {
-		if (condition(item)) {
-			passed.push(item);
-		} else {
-			failed.push(item);
-		}
-	}
-
-	return [passed, failed];
-}
-
 export function getAllDirs(app: App): Set<string> {
 	const dirs = new Set<string>();
 
