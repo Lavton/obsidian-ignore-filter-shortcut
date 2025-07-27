@@ -49,7 +49,7 @@ export function addExсeptIt(path: string, ignoreList: Array<string>, defaultLis
 	const defaultSet = new Set(defaultList)
 	const newIgnoreList = ignoreList.filter(item => defaultSet.has(item))
 	// add Roots 
-	const roots = getRoots(allDirs);
+	const roots = getRoots(allDirs).filter(item => !newIgnoreList.includes(item));
 	newIgnoreList.push(...roots)
 	// make removeOnParents for needed path.
 	return removeOnParents(path, newIgnoreList, allDirs) 
