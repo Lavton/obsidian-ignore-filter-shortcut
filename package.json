@@ -1,7 +1,7 @@
 {
-	"name": "ignore-filters-shortcuts",
-	"version": "0.0.1",
-	"description": "plugin for quick update of ignore filters",
+	"name": "ignore-filters-boost",
+	"version": "0.1.0",
+	"description": "Simplifing and speed up 'excluded files' (or 'ignore filters') changes: provides menu item to include/remove folder",
 	"main": "main.js",
 	"scripts": {
 		"dev": "node esbuild.config.mjs",

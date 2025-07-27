@@ -1,9 +1,9 @@
 {
-	"id": "ignore-filters-shortcuts",
-	"name": "Ignore Filter Shortcuts",
-	"version": "0.0.1",
+	"id": "ignore-filters-boost",
+	"name": "Ignore Filters Boost",
+	"version": "0.1.0",
 	"minAppVersion": "1.1.0",
-	"description": "the plugin is simplify the 'ignore filter' changes",
+	"description": "Simplifing and speed up 'excluded files' (or 'ignore filters') changes: provides menu item to include/remove folder",
 	"author": "lavton",
 	"authorUrl": "https://github.com/Lavton",
 	"isDesktopOnly": false
