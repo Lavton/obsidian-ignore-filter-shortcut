@@ -38,6 +38,7 @@ But when "Look at folder tree" is on...
 This plugin simplifies making changes in ignore filters. Add commands with lists of ignore filter variants.
 
 ![remove parent](./images/remove_parent.png)
+
 ...and then you can remove `"ignore_1/sub_folder_1/"` from the ignore list. But if the list has only `"ignore_1/"`, it will be rearranged: the parent folder will be removed and siblings added. So now `ignore_1/sub_folder/` will be in the list :)
 
 ---
@@ -47,3 +48,4 @@ Some plans for the project. Feel free to ask for features by creating issues!
 - Language translation. I want to add support for different languages.
 - Create a "white list" of folders as a counterpart to the black (ignore filters) list.
 - Add workspaces. During publishing, I found the [Smart Excluded Files plugin](https://github.com/vlwkaos/obsidian-smart-excluded). It had some similar ideas, so maybe I'll include this functionality here.
+- Global plan: this plugin may become the part of "focus on topic" workflow -- I may create a few plugins help to took into account only some focus notes.
