@@ -15,7 +15,7 @@ export default class IgnoreFiltersPlugin extends Plugin implements settings.Sett
 		this.addSettingTab(new settings.IgnoreFiltersSettingTab(this.app, this));
 		this.addCommand({
 			id: 'switch-to-default-ignorence',
-			name: 'return ignore filters to default',
+			name: 'Return ignore filters to default',
 			callback: () => {
 				const defaultIgnore = this.settings.basicIgnores
 				setIgnoreFilters(this.app, defaultIgnore)

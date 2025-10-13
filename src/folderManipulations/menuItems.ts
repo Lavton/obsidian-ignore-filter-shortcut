@@ -45,7 +45,7 @@ export function removeSubsFromIgnoreList(item: MenuItem, dirpath: string, ignore
 }
 
 export function removeParentFromIgnoreList(item: MenuItem, dirpath: string, ignoreList: Array<string>, app: App): void {
-	item.setTitle("Remove folder from ignore list (+rearange neibors)")
+	item.setTitle("Remove folder from ignore list (+rearange neighbors)")
 		.setIcon("eye")
 		.onClick(() => {
 			const newIgnoreList = ignrCalc.removeOnParents(dirpath, ignoreList, [...getAllDirs(app)])

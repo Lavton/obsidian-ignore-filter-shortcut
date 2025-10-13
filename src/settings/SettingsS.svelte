@@ -56,7 +56,7 @@
 These filters will be applied when you run the "return to default" command and will remain in effect in case of an implicit delete.
 	  </div>
   {#if basicIgnores.length > 0}
-  <button onclick={() => removeAllDefault()}>clear list</button>
+  <button onclick={() => removeAllDefault()}>Clear list</button>
   {/if}
     </div>
 
@@ -66,7 +66,7 @@ These filters will be applied when you run the "return to default" command and w
       <button 
         class="ignore-list-remove-btn" 
         onclick={() => removeItem(index)}
-        title="Удалить"
+        title="Delete"
       >
         ✕
       </button>
@@ -80,7 +80,7 @@ These filters will be applied when you run the "return to default" command and w
       <input 
         type="text" 
         bind:value={inputText}
-        placeholder="choose folder or regexp..."
+        placeholder="Choose folder"
         class="ignore-list-text-input"
         list="folders-list"
 		onkeydown={(e) => e.key === 'Enter' && addItem()} 

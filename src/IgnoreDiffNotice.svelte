@@ -16,24 +16,24 @@
 
 </script>
 
-<IgnoreNotice title="Update ignore filters. Now they are:" whatIgnore={newIgnoreList}/>
+<IgnoreNotice title="Updated ignore filters. Now they are:" whatIgnore={newIgnoreList}/>
 
 {#if showNew || showOld }
 <hr/>
 {#if showNew}
 {#if whatNew.length > 0}
-<IgnoreNotice title="add following:" whatIgnore={whatNew}/>
+<IgnoreNotice title="Added following:" whatIgnore={whatNew}/>
 {:else}
-<div><i>nothing added</i></div>
+<div><i>Nothing added</i></div>
 {/if}
 {/if}
 
 
 {#if showOld}
 {#if whatOld.length > 0}
-<IgnoreNotice title="remove following:" whatIgnore={whatOld}/>
+<IgnoreNotice title="Removed following:" whatIgnore={whatOld}/>
 {:else}
-<div><i>nothing removed</i></div>
+<div><i>Nothing removed</i></div>
 {/if}
 {/if}
 {/if}
