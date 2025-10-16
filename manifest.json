@@ -1,7 +1,7 @@
 {
 	"id": "ignore-filters-boost",
 	"name": "Ignore Filters Boost",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"minAppVersion": "1.1.0",
 	"description": "Simplifing and speed up 'excluded files' (or 'ignore filters') changes: provides menu item to include/remove folder",
 	"author": "lavton",
