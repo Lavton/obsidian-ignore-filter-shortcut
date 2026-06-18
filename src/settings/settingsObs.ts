@@ -45,7 +45,7 @@ export class IgnoreFiltersSettingTab extends PluginSettingTab {
 					this.plugin.settings.basicIgnores = settings
 					await this.plugin.saveSettings();
 				},
-				setIgnoreFilters: (whatIgnore: Array<String>) => {
+				setIgnoreFilters: (whatIgnore: Array<string>) => {
 					setIgnoreFilters(this.app, whatIgnore)
 				},
 				getIgnoreList: () => getIgnoreList(this.app),

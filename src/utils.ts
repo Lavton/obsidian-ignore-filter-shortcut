@@ -28,7 +28,7 @@ export function getAllDirs(app: App): Set<string> {
 /**
 * wrapper for setting new ignore filters 
 */
-export function setIgnoreFilters(app: App, whatIgnore: Array<String>) {
+export function setIgnoreFilters(app: App, whatIgnore: Array<string>) {
 	// @ts-ignore
 	app.vault.setConfig("userIgnoreFilters", whatIgnore);
 }
@@ -41,5 +41,4 @@ export function getIgnoreList(app: App): Array<string> {
 	// @ts-ignore
 	return app.vault.getConfig("userIgnoreFilters")
 }
-
 

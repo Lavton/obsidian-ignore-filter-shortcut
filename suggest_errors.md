@@ -12,6 +12,8 @@
 
 ### SRC-W001 - заменить `builtin-modules`
 
+**Статус:** исправлено 2026-06-18.
+
 **Исходный warning:** `"builtin-modules" should be replaced with an alternative package.`
 
 **Старые координаты:** `package.json:19`
@@ -214,6 +216,8 @@ mount(SettingsS, {
 - Вызов `mount(SettingsS, ...)` остался.
 
 ### SRC-W007 - `string` вместо `String`
+
+**Статус:** исправлено 2026-06-18.
 
 **Исходный warning:** `Prefer using the primitive string as a type name, rather than the upper-cased String.`
 
@@ -543,16 +547,49 @@ npm run build
 
 `rg` ничего не находит. `npm run svelte-check` и `npm run build` проходят успешно.
 
+### 2026-06-18 - `SRC-W007`
+
+Исправлено:
+
+- `src/settings/settingsObs.ts`: `Array<String>` заменен на `Array<string>` в callback `setIgnoreFilters`.
+- `src/utils.ts`: `Array<String>` заменен на `Array<string>` в wrapper `setIgnoreFilters`.
+
+Проверка:
+
+```sh
+rg -n "\\bString\\b|Array<String>" src/settings/settingsObs.ts src/utils.ts
+npm run svelte-check
+npm run build
+```
+
+`rg` ничего не находит. `npm run svelte-check` и `npm run build` проходят успешно.
+
+### 2026-06-18 - `SRC-W001`
+
+Исправлено:
+
+- `esbuild.config.mjs`: `builtin-modules` заменен на встроенный `builtinModules` из `node:module`.
+- `esbuild.config.mjs`: в `external` используется `nodeBuiltins`, включая обычные имена модулей Node и варианты с префиксом `node:`.
+- `package.json`: devDependency `builtin-modules` удалена.
+- `package-lock.json`: удален блок `node_modules/builtin-modules` и корневая ссылка на зависимость.
+
+Проверка:
+
+```sh
+rg -n "builtin-modules|from \"node:module\"|from 'node:module'" package.json package-lock.json esbuild.config.mjs
+npm run svelte-check
+npm run build
+```
+
+`rg` находит только `import { builtinModules } from "node:module";` в `esbuild.config.mjs`. `npm run svelte-check` и `npm run build` проходят успешно.
+
 ## Рекомендуемый порядок будущих исправлений
 
-1. Исправить source warnings группами:
-   - `SRC-W007`: `String` -> `string`.
-   - `SRC-W001`: заменить `builtin-modules` на `node:module`.
-2. Обновить зависимости:
+1. Обновить зависимости:
    - `svelte` до `^5.53.5` или выше.
    - `@typescript-eslint/eslint-plugin` и `@typescript-eslint/parser` вместе, затем проверить транзитивные `js-yaml`, `minimatch`, `ajv`, `flatted`, `brace-expansion`, `picomatch`.
-3. Если после обычного обновления lock-файл все еще содержит уязвимые транзитивные версии, добавить npm `overrides` только для оставшихся пакетов.
-4. После правок прогнать:
+2. Если после обычного обновления lock-файл все еще содержит уязвимые транзитивные версии, добавить npm `overrides` только для оставшихся пакетов.
+3. После правок прогнать:
 
 ```sh
 npm run build

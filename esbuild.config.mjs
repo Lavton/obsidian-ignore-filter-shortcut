@@ -1,6 +1,6 @@
 import esbuild from "esbuild";
 import process from "process";
-import builtins from "builtin-modules";
+import { builtinModules } from "node:module";
 import esbuildSvelte from 'esbuild-svelte';
 import { sveltePreprocess } from 'svelte-preprocess';
 
@@ -12,6 +12,10 @@ if you want to view the source, please visit the github repository of this plugi
 `;
 
 const prod = (process.argv[2] === "production");
+const nodeBuiltins = [
+	...builtinModules,
+	...builtinModules.map((name) => `node:${name}`),
+];
 
 const context = await esbuild.context({
 	banner: {
@@ -39,7 +43,7 @@ const context = await esbuild.context({
 		"@lezer/common",
 		"@lezer/highlight",
 		"@lezer/lr",
-		...builtins],
+		...nodeBuiltins],
 	format: "cjs",
 	target: "es2018",
 	logLevel: "info",
