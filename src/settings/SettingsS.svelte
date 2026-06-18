@@ -12,8 +12,9 @@
 	let { allDirs, settings, saveSettings, getIgnoreList, setIgnoreFilters }: Props = $props();
 
 	let inputText = $state('');
-	let folders = allDirs;
-	let basicIgnores = $state(settings || [])
+	const folders = $derived(allDirs);
+	const initialSettings = () => settings || [];
+	let basicIgnores = $state(initialSettings())
   
 	async function addItem() {
 		if (inputText.trim() === "") return;

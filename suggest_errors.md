@@ -256,9 +256,11 @@ export function setIgnoreFilters(app: App, whatIgnore: Array<string>) {
 
 ### DEP-W001 - `js-yaml` via `@typescript-eslint/eslint-plugin`
 
+**Статус:** исправлено 2026-06-18.
+
 **Исходный warning:** Potentially vulnerable dependency `js-yaml`; upgrade to `4.1.1` or later. Advisory: https://github.com/advisories/GHSA-mh29-5h37-fv8m
 
-**Текущее состояние:** `package-lock.json` содержит `node_modules/js-yaml` version `4.1.0`.
+**Текущее состояние:** исправлено; `package-lock.json` содержит `node_modules/js-yaml` version `4.2.0`.
 
 **Стабильный поиск:**
 
@@ -274,9 +276,11 @@ rg -n "\"node_modules/js-yaml\"|\"js-yaml\"" package-lock.json package.json
 
 ### DEP-W002 - `svelte` advisory `GHSA-crpf-4hrx-3jrp`
 
+**Статус:** исправлено 2026-06-18.
+
 **Исходный warning:** Potentially vulnerable dependency `svelte`; upgrade to `5.51.5` or later. Advisory: https://github.com/advisories/GHSA-crpf-4hrx-3jrp
 
-**Текущее состояние:** `package.json` задает `"svelte": "^5.36.7"`, lock-файл содержит `node_modules/svelte` version `5.36.7`.
+**Текущее состояние:** исправлено; `package.json` задает `"svelte": "^5.53.5"`, lock-файл содержит `node_modules/svelte` version `5.56.3`.
 
 **Стабильный поиск:**
 
@@ -292,9 +296,11 @@ rg -n "\"svelte\":|\"node_modules/svelte\"" package.json package-lock.json
 
 ### DEP-W003 - `svelte` advisory `GHSA-m56q-vw4c-c2cp`
 
+**Статус:** исправлено 2026-06-18.
+
 **Исходный warning:** Potentially vulnerable dependency `svelte`; upgrade to `5.51.5` or later. Advisory: https://github.com/advisories/GHSA-m56q-vw4c-c2cp
 
-**Текущее состояние:** то же, что `DEP-W002`: `svelte 5.36.7`.
+**Текущее состояние:** исправлено; то же, что `DEP-W002`: `svelte 5.56.3`.
 
 **Стабильный поиск:**
 
@@ -308,9 +314,11 @@ rg -n "\"svelte\":|\"node_modules/svelte\"" package.json package-lock.json
 
 ### DEP-W004 - `svelte` advisory `GHSA-f7gr-6p89-r883`
 
+**Статус:** исправлено 2026-06-18.
+
 **Исходный warning:** Potentially vulnerable dependency `svelte`; upgrade to `5.51.5` or later. Advisory: https://github.com/advisories/GHSA-f7gr-6p89-r883
 
-**Текущее состояние:** то же, что `DEP-W002`: `svelte 5.36.7`.
+**Текущее состояние:** исправлено; то же, что `DEP-W002`: `svelte 5.56.3`.
 
 **Стабильный поиск:**
 
@@ -324,9 +332,11 @@ rg -n "\"svelte\":|\"node_modules/svelte\"" package.json package-lock.json
 
 ### DEP-W005 - `minimatch` advisory `GHSA-3ppc-4f35-3m26`
 
+**Статус:** исправлено 2026-06-18.
+
 **Исходный warning:** Potentially vulnerable dependency `minimatch`; upgrade to `3.1.3` or later. Advisory: https://github.com/advisories/GHSA-3ppc-4f35-3m26
 
-**Текущее состояние:** `package-lock.json` содержит `node_modules/minimatch` version `3.1.2`.
+**Текущее состояние:** исправлено; `package-lock.json` содержит `node_modules/minimatch` version `3.1.5`.
 
 **Стабильный поиск:**
 
@@ -342,9 +352,11 @@ rg -n "\"node_modules/minimatch\"|\"minimatch\"" package-lock.json package.json
 
 ### DEP-W006 - `minimatch` advisory `GHSA-7r86-cg39-jmmj`
 
+**Статус:** исправлено 2026-06-18.
+
 **Исходный warning:** Potentially vulnerable dependency `minimatch`; upgrade to `3.1.3` or later. Advisory: https://github.com/advisories/GHSA-7r86-cg39-jmmj
 
-**Текущее состояние:** то же, что `DEP-W005`: `minimatch 3.1.2`.
+**Текущее состояние:** исправлено; то же, что `DEP-W005`: `minimatch 3.1.5`.
 
 **Стабильный поиск:**
 
@@ -358,9 +370,11 @@ rg -n "\"node_modules/minimatch\"|\"minimatch\"" package-lock.json package.json
 
 ### DEP-W007 - `minimatch` advisory `GHSA-23c5-xmqv-rm74`
 
+**Статус:** исправлено 2026-06-18.
+
 **Исходный warning:** Potentially vulnerable dependency `minimatch`; upgrade to `3.1.4` or later. Advisory: https://github.com/advisories/GHSA-23c5-xmqv-rm74
 
-**Текущее состояние:** то же, что `DEP-W005`: `minimatch 3.1.2`.
+**Текущее состояние:** исправлено; то же, что `DEP-W005`: `minimatch 3.1.5`.
 
 **Стабильный поиск:**
 
@@ -374,9 +388,11 @@ rg -n "\"node_modules/minimatch\"|\"minimatch\"" package-lock.json package.json
 
 ### DEP-W008 - `ajv` via `@typescript-eslint/eslint-plugin`
 
+**Статус:** исправлено 2026-06-18.
+
 **Исходный warning:** Potentially vulnerable dependency `ajv`; upgrade to `6.14.0` or later. Advisory: https://github.com/advisories/GHSA-2g4f-4pwh-qvx6
 
-**Текущее состояние:** `package-lock.json` содержит `node_modules/ajv` version `6.12.6`.
+**Текущее состояние:** исправлено; `package-lock.json` содержит `node_modules/ajv` version `6.15.0`.
 
 **Стабильный поиск:**
 
@@ -392,9 +408,11 @@ rg -n "\"node_modules/ajv\"|\"ajv\"" package-lock.json package.json
 
 ### DEP-W009 - `svelte` advisory `GHSA-phwv-c562-gvmh`
 
+**Статус:** исправлено 2026-06-18.
+
 **Исходный warning:** Potentially vulnerable dependency `svelte`; upgrade to `5.53.5` or later. Advisory: https://github.com/advisories/GHSA-phwv-c562-gvmh
 
-**Текущее состояние:** то же, что `DEP-W002`: `svelte 5.36.7`.
+**Текущее состояние:** исправлено; то же, что `DEP-W002`: `svelte 5.56.3`.
 
 **Стабильный поиск:**
 
@@ -408,9 +426,11 @@ rg -n "\"svelte\":|\"node_modules/svelte\"" package.json package-lock.json
 
 ### DEP-W010 - `flatted` advisory `GHSA-25h7-pfq9-p65f`
 
+**Статус:** исправлено 2026-06-18.
+
 **Исходный warning:** Potentially vulnerable dependency `flatted`; upgrade to `3.4.0` or later. Advisory: https://github.com/advisories/GHSA-25h7-pfq9-p65f
 
-**Текущее состояние:** `package-lock.json` содержит `node_modules/flatted` version `3.2.7`.
+**Текущее состояние:** исправлено; `package-lock.json` содержит `node_modules/flatted` version `3.4.2`.
 
 **Стабильный поиск:**
 
@@ -426,9 +446,11 @@ rg -n "\"node_modules/flatted\"|\"flatted\"" package-lock.json package.json
 
 ### DEP-W011 - `flatted` advisory `GHSA-rf6f-7fwh-wjgh`
 
+**Статус:** исправлено 2026-06-18.
+
 **Исходный warning:** Potentially vulnerable dependency `flatted`; upgrade to `3.4.2` or later. Advisory: https://github.com/advisories/GHSA-rf6f-7fwh-wjgh
 
-**Текущее состояние:** то же, что `DEP-W010`: `flatted 3.2.7`.
+**Текущее состояние:** исправлено; то же, что `DEP-W010`: `flatted 3.4.2`.
 
 **Стабильный поиск:**
 
@@ -442,9 +464,11 @@ rg -n "\"node_modules/flatted\"|\"flatted\"" package-lock.json package.json
 
 ### DEP-W012 - `brace-expansion` via `@typescript-eslint/eslint-plugin`
 
+**Статус:** исправлено 2026-06-18.
+
 **Исходный warning:** Potentially vulnerable dependency `brace-expansion`; upgrade to `1.1.13` or later. Advisory: https://github.com/advisories/GHSA-f886-m6hf-6m8v
 
-**Текущее состояние:** `package-lock.json` содержит `node_modules/brace-expansion` version `1.1.12`.
+**Текущее состояние:** исправлено; `package-lock.json` содержит `node_modules/brace-expansion` version `1.1.15`.
 
 **Стабильный поиск:**
 
@@ -460,9 +484,11 @@ rg -n "\"node_modules/brace-expansion\"|\"brace-expansion\"" package-lock.json p
 
 ### DEP-W013 - `picomatch` advisory `GHSA-3v7f-55p6-f55p`
 
+**Статус:** исправлено 2026-06-18.
+
 **Исходный warning:** Potentially vulnerable dependency `picomatch`; upgrade to `2.3.2` or later. Advisory: https://github.com/advisories/GHSA-3v7f-55p6-f55p
 
-**Текущее состояние:** основной `node_modules/picomatch` в lock-файле имеет version `2.3.1`.
+**Текущее состояние:** исправлено; основной `node_modules/picomatch` в lock-файле имеет version `2.3.2`.
 
 **Стабильный поиск:**
 
@@ -478,9 +504,11 @@ rg -n "\"node_modules/picomatch\"|\"picomatch\"" package-lock.json package.json
 
 ### DEP-W014 - `picomatch` advisory `GHSA-c2c7-rcm5-vvqj`
 
+**Статус:** исправлено 2026-06-18.
+
 **Исходный warning:** Potentially vulnerable dependency `picomatch`; upgrade to `2.3.2` or later. Advisory: https://github.com/advisories/GHSA-c2c7-rcm5-vvqj
 
-**Текущее состояние:** то же, что `DEP-W013`: основной `picomatch 2.3.1`.
+**Текущее состояние:** исправлено; то же, что `DEP-W013`: основной `picomatch 2.3.2`.
 
 **Стабильный поиск:**
 
@@ -583,13 +611,43 @@ npm run build
 
 `rg` находит только `import { builtinModules } from "node:module";` в `esbuild.config.mjs`. `npm run svelte-check` и `npm run build` проходят успешно.
 
+### 2026-06-18 - `DEP-W001`-`DEP-W014`
+
+Исправлено:
+
+- `package.json`: `svelte` обновлен с `^5.36.7` до `^5.53.5`.
+- `package.json`: добавлены npm `overrides` для транзитивных зависимостей `ajv`, `brace-expansion`, `flatted`, `js-yaml`, `minimatch`, `picomatch`.
+- `package-lock.json`: пересчитан через `npm install --package-lock-only`.
+- `node_modules`: синхронизирован через `npm install`.
+- `src/IgnoreDiffNotice.svelte`: вычисляемые списки `whatNew` и `whatOld` переведены на `$derived`, чтобы убрать Svelte 5 warning `state_referenced_locally`.
+- `src/settings/SettingsS.svelte`: `folders` переведен на `$derived`, начальный mutable список `basicIgnores` инициализируется через helper-функцию, чтобы убрать Svelte 5 warning `state_referenced_locally`.
+
+Итоговые версии в `package-lock.json`:
+
+- `js-yaml`: `4.2.0` (`DEP-W001`, минимум `4.1.1`).
+- `svelte`: `5.56.3` (`DEP-W002`, `DEP-W003`, `DEP-W004`, `DEP-W009`, минимум `5.53.5`).
+- `minimatch`: `3.1.5` (`DEP-W005`, `DEP-W006`, `DEP-W007`, минимум `3.1.4`).
+- `ajv`: `6.15.0` (`DEP-W008`, минимум `6.14.0`).
+- `flatted`: `3.4.2` (`DEP-W010`, `DEP-W011`, минимум `3.4.2`).
+- `brace-expansion`: `1.1.15` (`DEP-W012`, минимум `1.1.13`).
+- `picomatch`: `2.3.2` (`DEP-W013`, `DEP-W014`, минимум `2.3.2`).
+
+Проверка:
+
+```sh
+node -e "const lock=require('./package-lock.json'); for (const p of ['js-yaml','svelte','minimatch','ajv','flatted','brace-expansion','picomatch']) { const key='node_modules/'+p; console.log(p, lock.packages[key]?.version); }"
+npm audit --audit-level=moderate
+npm run svelte-check
+npm run build
+```
+
+`npm audit` сообщает `found 0 vulnerabilities`. `npm run svelte-check` и `npm run build` проходят успешно.
+
 ## Рекомендуемый порядок будущих исправлений
 
-1. Обновить зависимости:
-   - `svelte` до `^5.53.5` или выше.
-   - `@typescript-eslint/eslint-plugin` и `@typescript-eslint/parser` вместе, затем проверить транзитивные `js-yaml`, `minimatch`, `ajv`, `flatted`, `brace-expansion`, `picomatch`.
-2. Если после обычного обновления lock-файл все еще содержит уязвимые транзитивные версии, добавить npm `overrides` только для оставшихся пакетов.
-3. После правок прогнать:
+Все `SRC-*` и `DEP-*` warnings из этого документа закрыты.
+
+После будущих правок прогонять:
 
 ```sh
 npm run build

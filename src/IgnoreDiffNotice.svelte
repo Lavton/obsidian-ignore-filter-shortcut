@@ -11,8 +11,8 @@
 	}
   
   let {oldIgnoreList = [], newIgnoreList, showNew = false, showOld = false}: Props = $props();
-  const whatNew: Array<string> = showNew ? newIgnoreList.filter(i => !oldIgnoreList.includes(i)) : []
-  const whatOld: Array<string> = showOld ? oldIgnoreList.filter(i => !newIgnoreList.includes(i)) : []
+  const whatNew: Array<string> = $derived(showNew ? newIgnoreList.filter(i => !oldIgnoreList.includes(i)) : []);
+  const whatOld: Array<string> = $derived(showOld ? oldIgnoreList.filter(i => !newIgnoreList.includes(i)) : []);
 
 </script>
 
