@@ -4,13 +4,13 @@
 	import IgnoreNotice from './IgnoreNotice.svelte';
 	
 	interface Props {
-		oldIgnoreList: Array<string> | null=null;
+		oldIgnoreList?: Array<string>;
 		newIgnoreList: Array<string>;
-		showNew: bool=false;
-		showOld: bool=false; 
+		showNew?: boolean;
+		showOld?: boolean; 
 	}
   
-  let {oldIgnoreList, newIgnoreList, showNew, showOld}: Props = $props();
+  let {oldIgnoreList = [], newIgnoreList, showNew = false, showOld = false}: Props = $props();
   const whatNew: Array<string> = showNew ? newIgnoreList.filter(i => !oldIgnoreList.includes(i)) : []
   const whatOld: Array<string> = showOld ? oldIgnoreList.filter(i => !newIgnoreList.includes(i)) : []
 

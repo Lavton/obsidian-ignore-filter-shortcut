@@ -6,7 +6,7 @@
 		settings: Array<string>;
 		saveSettings(settings: Array<string>): Promise<void>;
 		getIgnoreList(): Array<string>;
-		setIgnoreFilters(whatIgnore: Array<string>);
+		setIgnoreFilters(whatIgnore: Array<string>): void;
 	}
   
 	let { allDirs, settings, saveSettings, getIgnoreList, setIgnoreFilters }: Props = $props();
@@ -41,7 +41,7 @@
 		notifyUserAboutNewIgnoreList(basicIgnores)
 	}
   // Автосохранение при изменении
-  async function removeItem(index) {
+  async function removeItem(index: number) {
 	basicIgnores = basicIgnores.filter((_, i) => i !== index);
 	await saveSettings(basicIgnores);
   }
@@ -97,4 +97,3 @@ These filters will be applied when you run the "return to default" command and w
   {/if}
 <button onclick={() => putCurrent()}>← Put current defaults to ignore list</button>
 </div>
-

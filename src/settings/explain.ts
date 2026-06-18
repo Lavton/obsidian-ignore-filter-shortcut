@@ -2,8 +2,8 @@ import Explain from './Explain.svelte';
 import { mount } from 'svelte';
 
 export function createSettingExplainFragment(): DocumentFragment {
-	const fragment = document.createDocumentFragment();
-	const container = document.createElement('div');
+	const fragment = createFragment();
+	const container = createDiv();
 
 	const component = mount(Explain, {
 		target: container,

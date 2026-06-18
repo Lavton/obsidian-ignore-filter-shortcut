@@ -4,7 +4,7 @@ import IgnoreDiffNotice from 'src/IgnoreDiffNotice.svelte';
 import { mount } from 'svelte';
 
 export function notifyUserAboutNewIgnoreList(whatIgnore: Array<string>): Notice {
-	const container = document.createElement('div');
+	const container = createDiv();
 
 	const component = mount(IgnoreDiffNotice, {
 		target: container,
@@ -13,7 +13,7 @@ export function notifyUserAboutNewIgnoreList(whatIgnore: Array<string>): Notice 
 		}
 	});
 
-	const fragment = document.createDocumentFragment();
+	const fragment = createFragment();
 	while (container.firstChild) {
 		fragment.appendChild(container.firstChild);
 	}
@@ -21,7 +21,7 @@ export function notifyUserAboutNewIgnoreList(whatIgnore: Array<string>): Notice 
 }
 
 export function notifyUserAboutChangesInIgnoreList(oldList: Array<string>, newList: Array<string>, showAdded: boolean, showDeleted: boolean): Notice {
-	const container = document.createElement('div');
+	const container = createDiv();
 
 	const component = mount(IgnoreDiffNotice, {
 		target: container,
@@ -33,7 +33,7 @@ export function notifyUserAboutChangesInIgnoreList(oldList: Array<string>, newLi
 		}
 	});
 
-	const fragment = document.createDocumentFragment();
+	const fragment = createFragment();
 	while (container.firstChild) {
 		fragment.appendChild(container.firstChild);
 	}

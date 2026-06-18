@@ -1,9 +1,8 @@
 <script lang="ts">
   
-  let { title, whatIgnore }: {title: string, whatIgnore: Array<string>} = $props();
-	displayFilters = whatIgnore.slice(0, 10);
-
-	hasMore = whatIgnore.length > 10;
+	let { title, whatIgnore }: {title: string, whatIgnore: Array<string>} = $props();
+	const displayFilters = $derived(whatIgnore.slice(0, 10));
+	const hasMore = $derived(whatIgnore.length > 10);
 </script>
 
 <div>
