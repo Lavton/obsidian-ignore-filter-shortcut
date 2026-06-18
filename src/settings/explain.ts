@@ -5,7 +5,7 @@ export function createSettingExplainFragment(): DocumentFragment {
 	const fragment = createFragment();
 	const container = createDiv();
 
-	const component = mount(Explain, {
+	mount(Explain, {
 		target: container,
 	});
 

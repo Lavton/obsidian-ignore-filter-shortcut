@@ -6,7 +6,7 @@ import { mount } from 'svelte';
 export function notifyUserAboutNewIgnoreList(whatIgnore: Array<string>): Notice {
 	const container = createDiv();
 
-	const component = mount(IgnoreDiffNotice, {
+	mount(IgnoreDiffNotice, {
 		target: container,
 		props: {
 			newIgnoreList: whatIgnore,
@@ -23,7 +23,7 @@ export function notifyUserAboutNewIgnoreList(whatIgnore: Array<string>): Notice 
 export function notifyUserAboutChangesInIgnoreList(oldList: Array<string>, newList: Array<string>, showAdded: boolean, showDeleted: boolean): Notice {
 	const container = createDiv();
 
-	const component = mount(IgnoreDiffNotice, {
+	mount(IgnoreDiffNotice, {
 		target: container,
 		props: {
 			newIgnoreList: newList,

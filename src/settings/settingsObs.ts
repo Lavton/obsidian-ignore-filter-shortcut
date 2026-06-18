@@ -37,7 +37,7 @@ export class IgnoreFiltersSettingTab extends PluginSettingTab {
 
 		containerEl.empty();
 
-		const settingsComponent = mount(SettingsS, {
+		mount(SettingsS, {
 			target: containerEl,
 			props: {
 				settings: this.plugin.settings.basicIgnores,

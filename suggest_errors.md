@@ -112,6 +112,8 @@ const element = activeDocument.createElement("div");
 
 ### SRC-W004 - неиспользуемый `component` после `mount()`
 
+**Статус:** исправлено 2026-06-18.
+
 **Исходный warning:** `'component' is assigned a value but never used. Allowed unused vars must match /^_/u.`
 
 **Старые координаты:** `src/notifiing.ts:9`, `src/notifiing.ts:26`, `src/settings/explain.ts:8`
@@ -178,6 +180,8 @@ const fragment = createFragment();
 - В местах создания фрагментов используется `createFragment()`.
 
 ### SRC-W006 - неиспользуемый `settingsComponent` после `mount()`
+
+**Статус:** исправлено 2026-06-18.
 
 **Исходный warning:** `'settingsComponent' is assigned a value but never used. Allowed unused vars must match /^_/u.`
 
@@ -521,10 +525,27 @@ npm run build
 
 Обе команды проходят успешно: `svelte-check found 0 errors and 0 warnings`, `npm run build` завершается с кодом `0`.
 
+### 2026-06-18 - `SRC-W004`, `SRC-W006`
+
+Исправлено:
+
+- `src/notifiing.ts`: убраны неиспользуемые локальные переменные `component` после `mount(IgnoreDiffNotice, ...)`.
+- `src/settings/explain.ts`: убрана неиспользуемая локальная переменная `component` после `mount(Explain, ...)`.
+- `src/settings/settingsObs.ts`: убрана неиспользуемая локальная переменная `settingsComponent` после `mount(SettingsS, ...)`.
+
+Проверка:
+
+```sh
+rg -n "const component = mount\\(|const settingsComponent = mount\\(|settingsComponent" src/notifiing.ts src/settings/explain.ts src/settings/settingsObs.ts
+npm run svelte-check
+npm run build
+```
+
+`rg` ничего не находит. `npm run svelte-check` и `npm run build` проходят успешно.
+
 ## Рекомендуемый порядок будущих исправлений
 
 1. Исправить source warnings группами:
-   - `SRC-W004`, `SRC-W006` вместе: убрать неиспользуемые результаты `mount()`.
    - `SRC-W007`: `String` -> `string`.
    - `SRC-W001`: заменить `builtin-modules` на `node:module`.
 2. Обновить зависимости:
